@@ -7,6 +7,10 @@ const express = require('express'),
 //export router
 module.exports = router;
 
+router.get('/', (req, res) => {
+    res.render('pages/home');
+})
+
 userRouter(router);
 buddyRouter(router);
 companyRouter(router);
