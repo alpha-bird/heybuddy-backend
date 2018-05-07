@@ -1,0 +1,77 @@
+API endpoints
+
+- User signup
+
+Uri : /user/signup
+Method : POST
+Header : application/json
+
+Body : 
+    email : Email Address
+    password : Password
+    pin : Pin Code
+    profile : { User information
+        firstName : FirstName
+        lastName : LastName
+        avatarUrl : User avatar Url //Optional
+        phoneNumber : Phone Number
+        dateOfBirth : Birthday
+        position : { User location
+            latitude
+            longitude
+        }
+    }
+    pushId : Push Token for Push notification
+    avatarData : Base64 Encoded Image //Optional
+    avatarExtend : Image extension //Optional
+
+- User Login
+
+Uri : /user/login
+Method : POST
+Header : application/json
+
+Body : 
+    email : Email Address
+    password : Password
+    pushid : Push Token for Push notification
+
+- Facebook Login
+
+Uri : /user/login/facebook
+Method : POST
+Header : application/json
+
+Body :
+    facebookId : User facebookId
+    facebookToken : Token from Facebook
+    pushId : Push Token for Push notification
+
+- Google Login
+
+Uri : /user/login/google
+Method : POST
+Header : application/json
+
+Body : 
+    googleId : User GoogleId
+    googleToken : Token from Google
+    serverAuthCode : Auth code from Google
+    pushID : Push Token for Push notification
+    profile : {
+        firstName : FirstName
+        lastName : LastName
+        ...
+    }
+
+- Twitter Login
+
+Uri : /user/login/twitter
+Method : POST
+Header : application/json
+
+Body : 
+    twitterId : User twitterId
+    authToken : Auth Token from Twitter
+    authTokenSecret : AuthTokenSecret from Twitter
+    pushID : Push Token for Push notification
