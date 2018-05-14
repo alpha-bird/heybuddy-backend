@@ -247,9 +247,9 @@ userModel.upsertTwitterUser = function(token, tokenSecret, profile, cb) {
                 },
                 profile : {
                     firstName : profile.name.familyName + profile.name.middleName,
-                    lastname : profile.namegivenName,
+                    lastName : profile.namegivenName,
                     //position : profile.geo_enabled ? profile.status.geo,
-                    avatarUrl : 'wagrjaworg',
+                    avatarUrl : profile.profile_image_url_https,
                 }
             });
 
