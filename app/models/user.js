@@ -247,7 +247,7 @@ userModel.upsertTwitterUser = function(token, tokenSecret, profile, cb) {
                 },
                 profile : {
                     firstName : profile.name.familyName + profile.name.middleName,
-                    lastName : profile.namegivenName,
+                    lastName : profile.name.givenName,
                     //position : profile.geo_enabled ? profile.status.geo,
                     avatarUrl : profile.profile_image_url_https,
                 }
