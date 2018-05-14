@@ -248,8 +248,8 @@ userModel.upsertTwitterUser = function(token, tokenSecret, profile, cb) {
                 profile : {
                     firstName : profile.name.familyName + profile.name.middleName,
                     lastName : profile.name.givenName,
-                    //position : profile.geo_enabled ? profile.status.geo,
-                    avatarUrl : profile.profile_image_url_https,
+                    avatarUrl : profile._json.profile_image_url_https
+                    //position : profile._json.geo_enabled ? profile._json.status.geo,
                 }
             });
 
