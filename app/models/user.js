@@ -238,25 +238,26 @@ userModel.upsertTwitterUser = function(token, tokenSecret, profile, cb) {
       'twitterProvider.id': profile.id
     }, function(err, user) {
       // no user was found, lets create a new one
-      if (!user) {
-        var newUser = new that({
-          email: profile.emails[0].value,
-          twitterProvider: {
-            id: profile.id,
-            token: token,
-            tokenSecret: tokenSecret
-          }
-        });
+        if (!user) {
+            console.log(profile);
+            var newUser = new that({
+                email: profile.emails[0].value,
+                twitterProvider: {
+                    id: profile.id,
+                    token: token,
+                    tokenSecret: tokenSecret
+                }
+            });
 
-        newUser.save(function(error, savedUser) {
-          if (error) {
-            console.log(error);
-          }
-          return cb(error, savedUser);
-        });
-      } else {
-        return cb(err, user);
-      }
+            newUser.save(function(error, savedUser) {
+                if (error) {
+                    console.log(error);
+                }
+                return cb(error, savedUser);
+            });
+        } else {
+            return cb(err, user);
+        }
     });
 };
 
