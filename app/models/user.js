@@ -235,17 +235,20 @@ userModel.findUsersByName = function( name, me ) {
 userModel.upsertTwitterUser = function(token, tokenSecret, profile, cb) {
     var that = this;
     return this.findOne({
-      'twitterProvider.id': profile.id
+      'email': profile.emails[0].value
     }, function(err, user) {
       // no user was found, lets create a new one
         if (!user) {
             console.log(profile);
             var newUser = new that({
                 email: profile.emails[0].value,
-                twitterProvider: {
-                    id: profile.id,
-                    token: token,
-                    tokenSecret: tokenSecret
+                social : {
+                    twitterId : profile.id
+                },
+                profile : {
+                    firstName : profile.name,
+                    //position : profile.geo_enabled ? profile.status.geo,
+                    avatarUrl : profile.profile_image_url_https,
                 }
             });
 
