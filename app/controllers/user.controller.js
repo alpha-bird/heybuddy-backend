@@ -220,7 +220,7 @@ const userModule = {
                 accessToken : req.token,
                 user : req.user
             }
-            return res.status(200).send(JSON.stringify(req.user));
+            return res.status(200).send(JSON.stringify(body));
         },
     /*
     sessionId : session id
