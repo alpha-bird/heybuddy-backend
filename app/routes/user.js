@@ -3,16 +3,6 @@ const userController = require('../controllers/user.controller'),
       passport = require('passport'),
       _AuthCheck = require('../auth');
 
-var generateToken = function (req, res, next) {
-    req.token = utilities.generateJWT(req.auth);
-    return next();
-};
-
-var sendToken = function (req, res) {
-    res.setHeader('x-auth-token', req.token);
-    return res.status(200).send(JSON.stringify(req.user));
-};
-
 module.exports = ( router ) => {
     router.post( '/user/login', userController.login );
     router.post( '/user/login/facebook', userController.loginWithFacebook);
@@ -26,14 +16,11 @@ module.exports = ( router ) => {
             }
 
             // prepare token for API
-            req.auth = {
-                id: req.user.id
-            };
-
+            req.auth = req.user.email;
             return next();
         },
-        generateToken,
-        sendToken
+        userController.generateToken,
+        userController.sendToken
     );
     router.post( '/user/sendcode', userController.sendCode);
     router.post( '/user/changepassword', userController.changePassword);

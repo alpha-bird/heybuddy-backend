@@ -164,50 +164,6 @@ const userModule = {
                         });
             }
         }),
-    loginWithTwitter : wrapper(function*(req, res) {
-            const { twitterId, authToken, authTokenSecret, pushID } = req.body;
-            var user = yield _User.findUserByTwitterId(twitterId);
-
-            if( user ) {
-                var oldSession = yield _Session.findSessionByUserID( user._id );
-                if( oldSession ) {
-                    yield oldSession.removeFromDataBase();
-                }
-                // New session create
-                var newSession = new _Session({
-                    userId : user._id,
-                    pushId : pushID
-                });
-                yield newSession.saveToDataBase();
-
-                var accessToken = utilities.generateJWT(user.twitterId);
-                return res.send({ success : true, accessToken : accessToken, sessionId : newSession._id, user : user._doc, message : 'Login Success!' });
-            }
-            else {
-                var newNotification = new _Notification( ); //New Empty Notification Document
-                yield newNotification.saveToDataBase();
-
-                var newUser = new _User({ twitterId : twitterId, email : twitterId })
-                newUser.updateField( 'notificationId', newNotification._id );
-                yield newUser.saveToDataBase();
-                
-                var newSession = new _Session({
-                    userId : newUser._id,
-                    pushId : pushID
-                });
-                yield newSession.saveToDataBase();
-
-                var accessToken = utilities.generateJWT(newUser.email);
-                return res.send({ 
-                            success: true , 
-                            accessToken : accessToken, 
-                            sessionId : newSession._id, 
-                            user : newUser._doc, 
-                            message : 'User Login with Google+ success!', 
-                            error : {} 
-                        });
-            }
-        }),
 
     reverseTwitter : wrapper(function*(req, res) {
             request.post({
@@ -252,6 +208,20 @@ const userModule = {
                 next();
             });
         }),
+
+    generateToken : function (req, res, next) {
+            //var user = yield _User.findOneByEmail(req.auth);
+            req.token = utilities.generateJWT(req.auth);
+            return next();
+        },
+        
+    sendToken : function (req, res) {
+            var body = {
+                accessToken : req.token,
+                user : req.user
+            }
+            return res.status(200).send(JSON.stringify(req.user));
+        },
     /*
     sessionId : session id
     newStatus : new status 0,1
