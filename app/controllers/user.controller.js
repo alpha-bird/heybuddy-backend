@@ -222,7 +222,7 @@ const userModule = {
             // New session create
             var newSession = new _Session({
                 userId : req.user._id,
-                pushId : ''
+                pushId : 'twitter push id'
             });
             yield newSession.saveToDataBase();
 
