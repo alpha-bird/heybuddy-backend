@@ -210,18 +210,29 @@ const userModule = {
         }),
 
     generateToken : function (req, res, next) {
-            //var user = yield _User.findOneByEmail(req.auth);
             req.token = utilities.generateJWT(req.auth);
             return next();
         },
         
-    sendToken : function (req, res) {
+    sendToken : wrapper(function*(req, res) {
+            var oldSession = yield _Session.findSessionByUserID( req.user._id );
+            if( oldSession ) {
+                yield oldSession.removeFromDataBase();
+            }
+            // New session create
+            var newSession = new _Session({
+                userId : req.user._id,
+                pushId : ''
+            });
+            yield newSession.saveToDataBase();
+
             var body = {
                 accessToken : req.token,
+                sessionId : newSession._id,
                 user : req.user
             }
             return res.status(200).send(JSON.stringify(body));
-        },
+        }),
     /*
     sessionId : session id
     newStatus : new status 0,1

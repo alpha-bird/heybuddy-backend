@@ -1,4 +1,6 @@
 const mongoose = require('mongoose'),
+      wrapper = require('co-express'),
+      _Notification = require('../models/notification'),
       Schema = mongoose.Schema;
 
 // create a schema
@@ -236,10 +238,14 @@ userModel.upsertTwitterUser = function(token, tokenSecret, profile, cb) {
     var that = this;
     return this.findOne({
       'email': profile.emails[0].value
-    }, function(err, user) {
+    }, wrapper(function*(err, user) {
       // no user was found, lets create a new one
         if (!user) {
+            var newNotification = new _Notification( ) //New Empty Notification Document
+            yield newNotification.saveToDataBase()
+            
             console.log(profile);
+
             var newUser = new that({
                 email: profile.emails[0].value,
                 social : {
@@ -250,7 +256,8 @@ userModel.upsertTwitterUser = function(token, tokenSecret, profile, cb) {
                     lastName : profile.name.givenName,
                     avatarUrl : profile._json.profile_image_url_https
                     //position : profile._json.geo_enabled ? profile._json.status.geo,
-                }
+                },
+                notificationId : newNotification._id
             });
 
             newUser.save(function(error, savedUser) {
@@ -262,7 +269,7 @@ userModel.upsertTwitterUser = function(token, tokenSecret, profile, cb) {
         } else {
             return cb(err, user);
         }
-    });
+    }));
 };
 
 // export the model
