@@ -205,7 +205,12 @@ userModel.findUserByTwitterId = function( twitterId ) {
 
 userModel.findUserByPhoneNumber = function( phoneNumber ) {
     return new Promise( (resolve, reject) => {
-        userModel.findOne({ phonenumber : phoneNumber }, (err, res) => {
+        userModel.findOne(
+            { 
+                profile : {
+                    phoneNumber :  phoneNumber
+                }
+            }, (err, res) => {
             if(err) reject(err)
             else resolve(res)
         })
@@ -219,9 +224,9 @@ userModel.findUsersByName = function( name, me ) {
             else {
                 var result = [];
                 users.map( element => {
-                    var fullName1 = element.firstname + element.lastname;
-                    var fullName2 = element.firstname + ' ' + element.lastname;
-                    if( element.firstname.includes(name) || element.lastname.includes(name) || fullName1.includes(name) || fullName2.includes(name) ) {
+                    var fullName1 = element.profile.firstName + element.profile.lastName;
+                    var fullName2 = element.profile.firstName + ' ' + element.profile.lastName;
+                    if( element.profile.firstName.includes(name) || element.profile.lastName.includes(name) || fullName1.includes(name) || fullName2.includes(name) ) {
                         if( element.email !== me.email )
                         {
                             result.push(element);
