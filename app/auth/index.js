@@ -3,8 +3,8 @@ const utilities = require('../lib/utilities'),
       _User = require('../models/user')
 
 module.exports = wrapper(function*(req, res, next) {
-    var token = req.body.accessToken;
-    if ( token === '' ) {
+    var token = req.headers["access-token"];
+    if ( !token ) {
         res.send({
             success : false,
             message : 'AccessToken is invalid! Are you logged in?'

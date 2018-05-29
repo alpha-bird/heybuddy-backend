@@ -4,6 +4,8 @@ const express = require('express'),
     buddyRouter = require('./buddy'),
     companyRouter = require('./company')
     chatRouter = require('./chat'),
+    incidentRouter = require('./incident')
+
 //export router
 module.exports = router;
 
@@ -15,3 +17,4 @@ userRouter(router);
 buddyRouter(router);
 companyRouter(router);
 chatRouter(router);
+incidentRouter(router);

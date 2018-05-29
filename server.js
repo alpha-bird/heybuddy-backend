@@ -16,6 +16,7 @@ const express = require('express'),
     cors = require('cors'), //hosting to hosting communication service
     expressLayouts = require('express-ejs-layouts'),
     passport = require('passport'),
+    favicon = require('serve-favicon'),
     TwitterTokenStrategy = require('passport-twitter-token'),
     _User = require('./app/models/user'),
     app_config = require('./app/config');
@@ -35,7 +36,7 @@ passport.use(new TwitterTokenStrategy({
 
 // configure our application
 app.use(express.static(__dirname + '/public'));
-
+//app.use(favicon(__dirname + '/public/images/favicon.png'));
 //App Access-Origin fixing(Cross origin)
 app.use(cors()); //important
 

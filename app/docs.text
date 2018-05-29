@@ -75,3 +75,53 @@ Body :
     authToken : Auth Token from Twitter
     authTokenSecret : AuthTokenSecret from Twitter
     pushID : Push Token for Push notification
+- Send code
+
+Uri : /user/sendcode
+Method : POST
+Body : 
+    phoneNumber : mandatory
+    text : random code : mandatory
+
+- Change Password
+
+Uri : /user/changepassword
+Method : POST
+Body : 
+    phoneNumber : mandatory
+    newPass : mandatory
+
+- Incident Create
+
+Uri : /incident/create
+Method : POST
+Header : 
+    application/json
+    accessToken : String : mandatory
+Body : 
+    incidentId : String : mandatory
+    description : String : mandatory
+    geo : {  : mandatory
+        address : String
+        latitude : Number,
+        longitude : Number
+    }
+
+- Incident Close
+
+Uri : /incident/close
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : 
+    incidentId : String : mandatory
+    
+- Incident All
+
+Uri : /incident/all
+Method : GET
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : 

@@ -2,13 +2,53 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const incidentSchema = new Schema({
-    companyName : { type: String, required: true, unique: true },
-    logo : String,
-    office_phone : String,
-    email : String,
+    incidentId : {
+        type : String,
+        unique : true,
+        required : true
+    },
+    status : {
+        type : String,
+        default : 'open',
+    },
+    createdTime : {
+        type : String,
+        required : true
+    },
+    description : {
+        type : String,
+        required : true
+    },
+    geo : {
+        address : {
+            type : String,
+        },
+        latitude : {
+            type : Number,
+            default : 0
+        },
+        longitude : {
+            type : Number,
+            default : 0
+        }
+    },
+    reporter : {
+        email : {
+            type : String,
+            required : true
+        },
+        firstname : {
+            type : String,
+            required : true
+        },
+        lastname : {
+            type : String,
+            required : true
+        }
+    }
 });
 
-companySchema.methods.saveToDataBase = function( ) {
+incidentSchema.methods.saveToDataBase = function( ) {
     return new Promise((resolve, reject) => {
         this.save(function(err){
             if(err) reject(err);
@@ -17,18 +57,19 @@ companySchema.methods.saveToDataBase = function( ) {
     });
 }
 
-companySchema.methods.updateField = function( key, value ) {
+incidentSchema.methods.updateField = function( key, value ) {
     this[key] = value;
 }
 
-const companyModel = mongoose.model('company', companySchema);
+const incidentModel = mongoose.model('incident', incidentSchema);
 
-companyModel.getAllCompanies = function( ) {
+incidentModel.getAllIncidents = function( ) {
     return new Promise( (resolve, reject) => {
-        companyModel.find({}, (error, companies) => {
+        incidentModel.find({}, (error, incidents) => {
             if(error) reject(error);
-            else resolve(companies);
+            else resolve(incidents);
         });
     } );
 }
-module.exports = companyModel;
+
+module.exports = incidentModel;
