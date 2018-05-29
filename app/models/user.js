@@ -119,11 +119,11 @@ const userSchema = new Schema({
         type : Array,
         default : []
     },
-    buddyRequests : {
+    buddyrequests : {
         type : Array,
         default : []
     },
-    pendingRequests : {
+    pendingrequests : {
         type : Array,
         default : []
     },
