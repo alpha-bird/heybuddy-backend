@@ -178,7 +178,13 @@ userModel.findOneById = function( id ) {
 
 userModel.findUserByFacebookId = function( facebookId ) {
     return new Promise( (resolve, reject) => {
-        userModel.findOne({ facebookId : facebookId }, (err, res) => {
+        userModel.findOne(
+            { 
+                social : {
+                    facebookId : facebookId 
+                }
+            }, 
+            (err, res) => {
             if(err) reject(err);
             else resolve(res);
         })
@@ -187,7 +193,12 @@ userModel.findUserByFacebookId = function( facebookId ) {
 
 userModel.findUserByGoogleId = function( googleId ) {
     return new Promise( (resolve, reject) => {
-        userModel.findOne({ googleId : googleId }, (err, res) => {
+        userModel.findOne(
+            {
+                social : {
+                    googleId : googleId 
+                } 
+            }, (err, res) => {
             if(err) reject(err);
             else resolve(res);
         })
