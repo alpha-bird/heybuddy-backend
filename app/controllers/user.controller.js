@@ -114,10 +114,10 @@ const userModule = {
                 if( yield _Facebook.validateClientToken(token, facebookToken) ) {
                     var profile = yield _Facebook.getFacebookProfile(facebookId, token);
                     console.log(profile)
-                    return res.send({ success : false, accessToken : '', sessionId : '', user : {}, message : 'User not exist!' });
+                    return res.send({ success : true, accessToken : '', sessionId : '', user : {}, message : 'User created!' });
                 }
                 else {
-                    return res.send({ success : false, accessToken : '', sessionId : '', user : {}, message : 'User not exist!' });
+                    return res.send({ success : false, accessToken : '', sessionId : '', user : {}, message : 'Auth failed!' });
                 }
             }
         }),

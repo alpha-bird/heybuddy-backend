@@ -27,15 +27,23 @@ const getAccessToken = () => new Promise((resolve, reject) => {
 });
 
 const validateClientToken = (accessToken, clientToken) => new Promise((resolve, reject) => {
-  Wreck.get(`${facebookApiUrl}/debug_token?input_token=${clientToken}&access_token=${accessToken}`, 
-  (err, res, payload) => {
-    if (err) {
-      reject(err);
-    } else {
-      const pl = JSON.parse(payload);
-      resolve(pl);
+    var options = {
+        method : 'GET',
+        uri : `${facebookApiUrl}/debug_token?input_token=${clientToken}&access_token=${accessToken}`
     }
-  });
+    request(options, (err, res, payload) => {
+        if (err) {
+            resolve(false);
+        } else {
+            const pl = JSON.parse(payload);
+            if( pl.error ) {
+                resolve(false)
+            }
+            else {
+                resolve(true);
+            }
+        }
+    });
 });
 
 const getFirstName = (facebookId, accessToken) => new Promise((resolve, reject) => {
