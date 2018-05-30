@@ -3,7 +3,7 @@ const buddyController = require('../controllers/buddy.controller'),
 
 module.exports = ( router ) => {
     router.post('/buddy/searchbuddiesbyname', _AuthCheck, buddyController.searchBuddiesByName);
-    router.post('/buddy/buddies', _AuthCheck ,buddyController.getAllBuddies);
+    router.get('/buddy/buddies', _AuthCheck ,buddyController.getAllBuddies);
     router.post('/buddy/buddyavailability', _AuthCheck, buddyController.getBuddyAvailability);
     router.post('/buddy/mybuddies', _AuthCheck, buddyController.getBuddies);
     router.post('/buddy/buddyreq', _AuthCheck, buddyController.getBuddyRequests);
