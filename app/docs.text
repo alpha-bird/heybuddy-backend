@@ -164,3 +164,11 @@ Header :
 
 Body : 
     chatId : Chat ID
+
+- Get All buddies
+
+Uri : /buddy/buddies
+Method : GET
+Header : 
+    application/json
+    access-token : String : mandatory
