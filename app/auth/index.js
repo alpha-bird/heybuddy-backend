@@ -4,7 +4,7 @@ const utilities = require('../lib/utilities'),
 
 module.exports = wrapper(function*(req, res, next) {
     var token = req.headers["access-token"];
-    //var token = req.body.accessToken;
+    
     if ( !token ) {
         res.send({
             success : false,
