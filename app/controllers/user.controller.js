@@ -89,8 +89,7 @@ const userModule = {
             }
         }),
     loginWithFacebook : wrapper( function*(req, res) {
-            const { facebookId, facebookToken, pushID } = req.body;
-            console.log(req.body)
+            const { facebookId, facebookToken, email, profile, pushID } = req.body;
             var user = yield _User.findUserByFacebookId(facebookId);
             if( user ) {
                 var oldSession = yield _Session.findSessionByUserID( user._id );
@@ -108,21 +107,40 @@ const userModule = {
                 return res.send({ success : true, accessToken : accessToken, sessionId : newSession._id, user : user._doc, message : 'Login Success!' });
             }
             else {
-                console.log('getting access token')
-                var token = yield _Facebook.getAccessToken();
-                console.log(token)
-                if( yield _Facebook.validateClientToken(token, facebookToken) ) {
-                    var profile = yield _Facebook.getFacebookProfile(facebookId, token);
-                    console.log(profile)
-                    return res.send({ success : true, accessToken : '', sessionId : '', user : {}, message : 'User created!' });
-                }
-                else {
-                    return res.send({ success : false, accessToken : '', sessionId : '', user : {}, message : 'Auth failed!' });
-                }
+                var newNotification = new _Notification( ); //New Empty Notification Document
+                yield newNotification.saveToDataBase();
+
+                var newUser = new _User(
+                    {
+                        email : email,
+                        social : {
+                            facebookId : facebookId
+                        },
+                        profile : profile
+                    }
+                )
+                newUser.updateField( 'notificationId', newNotification._id );
+                yield newUser.saveToDataBase();
+                
+                var newSession = new _Session({
+                    userId : newUser._id,
+                    pushId : pushID
+                });
+                yield newSession.saveToDataBase();
+
+                var accessToken = utilities.generateJWT(newUser.email);
+                return res.send({ 
+                            success: true , 
+                            accessToken : accessToken, 
+                            sessionId : newSession._id, 
+                            user : newUser._doc, 
+                            message : 'User Login with Facebook success!', 
+                            error : {} 
+                        });
             }
         }),
     loginWithGoogle : wrapper( function*(req, res) {
-            const { googleId, googleToken, serverAuthCode, pushID, profile } = req.body;
+            const { googleId, googleToken, serverAuthCode, pushID, email ,profile } = req.body;
             var user = yield _User.findUserByGoogleId(googleId);
             if( user ) {
                 var oldSession = yield _Session.findSessionByUserID( user._id );
@@ -143,7 +161,15 @@ const userModule = {
                 var newNotification = new _Notification( ); //New Empty Notification Document
                 yield newNotification.saveToDataBase();
 
-                var newUser = new _User(profile)
+                var newUser = new _User(
+                    {
+                        email : email,
+                        social : {
+                            googleId : googleId
+                        },
+                        profile : profile
+                    }
+                )
                 newUser.updateField( 'notificationId', newNotification._id );
                 yield newUser.saveToDataBase();
                 
