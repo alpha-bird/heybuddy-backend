@@ -89,7 +89,7 @@ const userModule = {
             }
         }),
     loginWithFacebook : wrapper( function*(req, res) {
-            const { facebookId, facebookToken, email, profile, pushID } = req.body;
+            const { facebookId, facebookToken, email, profile, pushId } = req.body;
             var user = yield _User.findUserByFacebookId(facebookId);
             if( user ) {
                 var oldSession = yield _Session.findSessionByUserID( user._id );
@@ -99,7 +99,7 @@ const userModule = {
                 // New session create
                 var newSession = new _Session({
                     userId : user._id,
-                    pushId : pushID
+                    pushId : pushId
                 });
                 yield newSession.saveToDataBase();
 
@@ -124,7 +124,7 @@ const userModule = {
                 
                 var newSession = new _Session({
                     userId : newUser._id,
-                    pushId : pushID
+                    pushId : pushId
                 });
                 yield newSession.saveToDataBase();
 
@@ -140,7 +140,7 @@ const userModule = {
             }
         }),
     loginWithGoogle : wrapper( function*(req, res) {
-            const { googleId, googleToken, serverAuthCode, pushID, email ,profile } = req.body;
+            const { googleId, googleToken, serverAuthCode, pushId, email ,profile } = req.body;
             var user = yield _User.findUserByGoogleId(googleId);
             if( user ) {
                 var oldSession = yield _Session.findSessionByUserID( user._id );
@@ -150,7 +150,7 @@ const userModule = {
                 // New session create
                 var newSession = new _Session({
                     userId : user._id,
-                    pushId : pushID
+                    pushId : pushId
                 });
                 yield newSession.saveToDataBase();
 
@@ -175,7 +175,7 @@ const userModule = {
                 
                 var newSession = new _Session({
                     userId : newUser._id,
-                    pushId : pushID
+                    pushId : pushId
                 });
                 yield newSession.saveToDataBase();
 
