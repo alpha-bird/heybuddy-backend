@@ -1,10 +1,6 @@
 {
     "name": "heybuddy",
     "version": "1.0.2",
-    "repository": {
-        "type": "bitbucket",
-        "url": "https://super_alpha099@bitbucket.org/super_alpha099/buddy-backend.git"
-    },
     "description": "node.js/express/mongodb",
     "main": "server.js",
     "scripts": {
