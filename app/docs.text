@@ -132,3 +132,35 @@ Header :
     application/json
     access-token : String : mandatory
 Body : 
+
+- Create Chat
+
+Uri : /chat/new
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : 
+    buddy : Buddy information who user need to chat with
+
+- Get All Available Chats
+
+Uri : /chat
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+
+Body : 
+
+
+- Get Specific Chat information
+
+Uri : /chat/chatinfo
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+
+Body : 
+    chatId : Chat ID
