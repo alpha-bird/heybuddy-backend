@@ -1,8 +1,0 @@
-deployment:
-  staging:
-    branch: master
-    commands:
-      - ./deploy_staging.sh
-    codedeploy:
-      heybuddy:
-        deployment_group: heybuddygroup-s484c7r
