@@ -17,11 +17,8 @@ test:
 deployment:
   staging:
     branch: master
+    commands:
+      - ./deploy_staging.sh
     codedeploy:
       heybuddy:
         deployment_group: heybuddygroup-s484c7r
-  hub:
-    branch: master
-    commands:
-      - docker login -u alphabird727 -p 'ghost123!@#'
-      - docker push alphabird727/exam
