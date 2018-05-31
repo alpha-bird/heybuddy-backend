@@ -36,10 +36,3 @@ jobs:
       # run tests!
       #Skip testing
       # - run: yarn test
-
-deployment:
-  staging:
-    branch: master
-    codedeploy:
-      heybuddy:
-        deployment_group: heybuddygroup-s484c7r

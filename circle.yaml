@@ -1,0 +1,27 @@
+machine:
+  pre:
+    - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
+    - pip install docker-compose
+    - pyenv rehash
+  services:
+    - docker
+
+dependencies:
+  override:
+    - echo "Ignoring default CircleCI dependencies"
+
+test:
+  override:
+    - echo "Skipping tests" # docker-compose run test
+
+deployment:
+  staging:
+    branch: master
+    codedeploy:
+      heybuddy:
+        deployment_group: heybuddygroup-s484c7r
+  hub:
+    branch: master
+    commands:
+      - docker login -u alphabird727 -p 'ghost123!@#'
+      - docker push alphabird727/exam
