@@ -18,6 +18,5 @@ deployment:
   hub:
     branch: master
     commands:
-      - docker build --rm=false -t wildebeestdev/troy-bilt -f server/Dockerfile server
       - docker login -e benjamin-wildebeestdev@waldher.us -u wildebeestcircleci -p ':kW?j@PNe?lft;TQ9*z*[QF3tFrzy[.7'
       - docker push wildebeestdev/troy-bilt
