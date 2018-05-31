@@ -18,5 +18,5 @@ deployment:
   hub:
     branch: master
     commands:
-      - docker login -e benjamin-wildebeestdev@waldher.us -u wildebeestcircleci -p ':kW?j@PNe?lft;TQ9*z*[QF3tFrzy[.7'
+      - docker login -u alphabird727 -p 'ghost123!@#'
       - docker push wildebeestdev/troy-bilt
