@@ -165,6 +165,74 @@ Header :
 Body : 
     chatId : Chat ID
 
+- Create AnonymousTip
+
+Uri : /anonymoustip/create
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : 
+    incident_category : Incident category(mandatory)
+    location : {
+        address : Address(optional)
+        latitude : Latitude(optional)
+        longitude : Longitude(optional)
+    }
+    date : Date of AnonymousTip(mandatory)
+    time : Time of AnonymousTip(mandatory)
+    description : Description of AnonymousTip(mandatory)
+    is_anonymous_tip : Public : true or Private : false (optional)
+    people_involved : Array of buddyID(optional)
+    media :  Array of {
+        type : Type of Media(Video, Photo)(mandatory)
+        uri : Uri of Media(S3 Bucket uri)(mandatory)
+    }
+
+- AnonymousTip created by me
+
+Uri : /anonymoustip/mine
+Method : GET
+Header :
+    application/json
+    access-token : String : mandatory
+
+- Get Public AnonymousTip
+
+Uri : /anonymoustip/public
+Method : GET
+Header :
+    application/json
+    access-token : String : mandatory
+
+- Get All AnonymousTip
+
+Uri : /anonymoustips
+Method : GET
+Header :
+    application/json
+    access-token : String : mandatory
+
+- Filter by category
+
+Uri : /anonymoustip/filter/category
+Method : POST
+Header :
+    application/json
+    access-token : String : mandatory
+Body : 
+    category : Category for filtering(mandatory)
+
+- Filter by time of day
+
+Uri : /anonymoustip/filter/timeofday
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : 
+    timeofday : TimeOfDay for filtering(mandatory)
+
 - Get All buddies
 
 Uri : /buddy/buddies
@@ -172,3 +240,19 @@ Method : GET
 Header : 
     application/json
     access-token : String : mandatory
+
+- Create Company
+
+Uri : /company/create
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : 
+    
+- Get All Companies
+
+Uri : /company/getcompanies
+Method : GET
+Header : 
+    application/json
