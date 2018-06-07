@@ -29,6 +29,20 @@ const companyModule = {
     getAllCompanies : wrapper( function*( req, res ) {
             var companies = yield _Company.getAllCompanies();
             return res.status(200).send({ success : true, companies : companies, error : {}, messsage : 'Success' });
+        }),
+    
+    getCompanyInfo : wrapper( function*( req, res ) {
+            var companyId = req.body.companyId
+            var company = yield _Company.findOneById(companyId)
+
+            return res.send({ success : true, company : company })
+        }),
+    
+    getEmployees : wrapper( function*(req, res) {
+            var companyId = req.body.companyId
+            var company = yield _Company.findOneById(companyId)
+
+            return res.send({ success : true, employees : company.employees})
         })
 }
 

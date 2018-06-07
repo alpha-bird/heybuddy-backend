@@ -1,6 +1,7 @@
 const mongoose = require('mongoose'),
       wrapper = require('co-express'),
       _Notification = require('../models/notification'),
+      moment = require('moment'),
       Schema = mongoose.Schema;
 
 // create a schema
@@ -125,6 +126,10 @@ const userSchema = new Schema({
     pendingrequests : {
         type : Array,
         default : []
+    },
+    createdTime : {
+        type : String,
+        required : true
     },
     notificationId : {
         type : Schema.Types.ObjectId,
@@ -272,6 +277,7 @@ userModel.upsertTwitterUser = function(token, tokenSecret, profile, cb) {
                     avatarUrl : profile._json.profile_image_url_https
                     //position : profile._json.geo_enabled ? profile._json.status.geo,
                 },
+                createdTime : moment(Date.now()).utc().format(),
                 notificationId : newNotification._id
             });
 

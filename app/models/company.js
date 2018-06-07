@@ -2,10 +2,20 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const companySchema = new Schema({
-    companyName : { type: String, required: true, unique: true },
+    companyName : { 
+        type: String, 
+        required: true,
+    },
     logo : String,
     office_phone : String,
-    email : String,
+    email : {
+        type : String,
+        required : true
+    },
+    employees : {
+        type : Array,
+        default : []
+    }
 });
 
 companySchema.methods.saveToDataBase = function( ) {
@@ -31,4 +41,14 @@ companyModel.getAllCompanies = function( ) {
         });
     } );
 }
+
+companyModel.findOneById = function( id ) {
+    return new Promise( ( resolve, reject ) => { 
+        companyModel.findOne({ _id : id }, (err, res) => {
+            if(err) reject(err);
+            else resolve(res);
+        });
+    });
+}
+
 module.exports = companyModel;

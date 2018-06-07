@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const anonymousTipSchema = new Schema({
-    incident_category : {
+    incidentCategory : {
         type: String, 
         required: true
     },
@@ -17,23 +17,15 @@ const anonymousTipSchema = new Schema({
             default : 0
         },
     },
-    date : {
-        type : String,
-        default : ''
-    },
-    time : {
-        type : String,
-        default : ''
-    },
     description : {
         type : String,
         default : ''
     },
-    is_anonymous_tip : {
+    isAnonymoustip : {
         type : Boolean,
         default : true
     },
-    people_involved : {
+    peopleInvolved : {
         type : Array,
         default : []
     },
@@ -41,7 +33,11 @@ const anonymousTipSchema = new Schema({
         type : Array,
         default : []
     },
-    created_by : {
+    createdTime : {
+        type : String,
+        required : true
+    },
+    createdBy : {
         type : Schema.Types.ObjectId,
         ref: 'user',
         required : true
@@ -65,7 +61,7 @@ const anonymousTipModel = mongoose.model('anonymoustip', anonymousTipSchema);
 
 anonymousTipModel.findAllByUserID = function( userId ) {
     return new Promise( (resolve, reject) => {
-        anonymousTipModel.find( { created_by : userId } ,(err, tips) => {
+        anonymousTipModel.find( { createdBy : userId } ,(err, tips) => {
             if(err) reject(err)
             else resolve(tips)
         })
@@ -74,7 +70,7 @@ anonymousTipModel.findAllByUserID = function( userId ) {
 
 anonymousTipModel.findAllPublic = function( ) {
     return new Promise( (resolve, reject) => {
-        anonymousTipModel.find( { is_anonymous_tip : true } ,(err, tips) => {
+        anonymousTipModel.find( { isAnonymoustip : true } ,(err, tips) => {
             if(err) reject(err)
             else resolve(tips)
         })
@@ -92,7 +88,7 @@ anonymousTipModel.findAll = function( ) {
 
 anonymousTipModel.findByCategory = function( category ) {
     return new Promise( (resolve, reject) => {
-        anonymousTipModel.find({ incident_category : category }, (error, tips) => {
+        anonymousTipModel.find({ incidentCategory : category }, (error, tips) => {
             if(error) reject(error);
             else resolve(tips);
         });

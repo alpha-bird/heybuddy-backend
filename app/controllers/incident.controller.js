@@ -1,6 +1,7 @@
 const utilities = require('../lib/utilities'),
       wrapper = require('co-express'),
-      _Incident = require('../models/incident');
+      _Incident = require('../models/incident'),
+      moment = require('moment');
 
 const incidentModule = {
     createIncident : wrapper(function*( req, res ) {
@@ -8,10 +9,11 @@ const incidentModule = {
         var incidentbody = {
             incidentId : req.body.incident.id,
             status : 'open',
-            createdTime : Date.now(),
+            createdTime : moment(Date.now()).utc().format(),
             description : req.body.incident.description,
             geo : req.body.incident.geo,
             reporter : {
+                reporterId : user._id,
                 email : user.email,
                 firstname : user.profile.firstName,
                 lastname : user.profile.lastName

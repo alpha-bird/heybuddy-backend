@@ -1,0 +1,24 @@
+machine:
+    pre:
+        - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
+    services:
+        - docker
+    python:
+        version: 2.7.11
+
+dependencies:
+    override:
+        - pip install docker-compose
+        - docker login -e $DOCKER_HUB_EMAIL -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
+
+test:
+  override:
+    - docker build -t heybuddy/me .
+    - echo "Skipping tests" # docker-compose run test
+
+deployment:
+  production:
+    branch: master
+    commands:
+      - docker-compose -f newproject-compose/production/docker-compose.yml up -d
+      - docker images --no-trunc | grep none | awk '{print $3}' | xargs docker rmi

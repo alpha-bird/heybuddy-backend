@@ -2,11 +2,13 @@ const utilities = require('../lib/utilities'),
       wrapper = require('co-express'),
       request = require('request'),
       _User = require('../models/user'),
+      _Company = require('../models/company'),
       _Notification = require('../models/notification'),
       _Session = require('../models/session'),
       _Facebook = require('../lib/facebook'),
       config = require('../config'),
-      twilio = require('twilio');
+      twilio = require('twilio'),
+      moment = require('moment');
 
 const userModule = {
     /*
@@ -30,6 +32,7 @@ const userModule = {
                 password : hashedPassword,
                 pin : pin,
                 profile : profile,
+                createdTime : moment(Date.now()).utc().format(),
                 notificationId : newNotification._id
             }) //New User with Notification
             yield newUser.saveToDataBase()
@@ -116,7 +119,8 @@ const userModule = {
                         social : {
                             facebookId : facebookId
                         },
-                        profile : profile
+                        profile : profile,
+                        createdTime : moment(Date.now()).utc().format()
                     }
                 )
                 newUser.updateField( 'notificationId', newNotification._id );
@@ -167,7 +171,8 @@ const userModule = {
                         social : {
                             googleId : googleId
                         },
-                        profile : profile
+                        profile : profile,
+                        createdTime : moment(Date.now()).utc().format(),
                     }
                 )
                 newUser.updateField( 'notificationId', newNotification._id );
@@ -277,12 +282,23 @@ const userModule = {
             res.send({ success : true, user : req.session.user._doc, error : {}, message : '' });
         }),
 
-    setLocations : wrapper( function*(req, res) {
+    setCompanies : wrapper( function*(req, res) {
             var user = req.session.user;
-            var locations = req.body.locations;
+            var companies = req.body.companies;
 
-            user.updateField('locations', locations);
+            user.updateField('companies', companies);
             yield user.saveToDataBase();
+
+            for( var i = 0; i < companies.length; i ++ ) {
+                var company = yield _Company.findOneById(companies[i])
+                var itsEmployees = Object.assign([], company._doc.employees)
+                
+                if( !itsEmployees.includes(user._id) ) {
+                    itsEmployees.push(user._id)
+                }
+                company.updateField('employees', itsEmployees)
+                yield company.saveToDataBase()
+            }
             res.send({ success : true, user : user._doc, error : {}, message : 'Successfully updated!' });
         }),
     sendCode : wrapper(function*(req, res) {

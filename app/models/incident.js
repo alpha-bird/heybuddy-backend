@@ -33,6 +33,11 @@ const incidentSchema = new Schema({
         }
     },
     reporter : {
+        reporterId : {
+            type : Schema.Types.ObjectId,
+            ref: 'user',
+            required : true
+        },
         email : {
             type : String,
             required : true
