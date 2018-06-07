@@ -35,14 +35,14 @@ const companyModule = {
             var companyId = req.body.companyId
             var company = yield _Company.findOneById(companyId)
 
-            return res.send({ success : true, company : company })
+            return res.send({ success : true, company : company._doc })
         }),
     
     getEmployees : wrapper( function*(req, res) {
             var companyId = req.body.companyId
             var company = yield _Company.findOneById(companyId)
 
-            return res.send({ success : true, employees : company.employees})
+            return res.send({ success : true, employees : company._doc.employees})
         })
 }
 

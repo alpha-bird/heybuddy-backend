@@ -256,3 +256,14 @@ Uri : /company/getcompanies
 Method : GET
 Header : 
     application/json
+
+- Get One company information
+
+Uri : /company/info
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+
+Body : 
+    companyId : Company ID
