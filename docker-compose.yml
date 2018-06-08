@@ -9,10 +9,3 @@ services:
             - mongo
         environment:
             - NODE_ENV=development
-    mongo:
-        container_name: mongo
-        image: mongo
-        volumes:
-            - ./temp:/data/db
-        ports:
-            - "27017:27017"
