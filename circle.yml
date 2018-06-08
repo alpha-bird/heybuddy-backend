@@ -37,4 +37,3 @@ deployment:
         #- docker pull heybuddy:latest
         - git clone git@github.com:alpha-bird/heybuddy-backend.git
         - docker-compose -f heybuddy-backend/docker-compose.yml up -d
-        - docker images --no-trunc | grep none | awk '{print $3}' | xargs docker rmi
