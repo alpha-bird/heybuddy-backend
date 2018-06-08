@@ -11,7 +11,7 @@ dependencies:
         - curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
         - chmod +x ~/docker-compose
         - sudo mv ~/docker-compose /usr/local/bin/docker-compose
-        - setup_remote_docker
+        - docker-compose --version
         - docker build --rm=false -t heybuddy .
         #- docker login -e alpha.birdprime@gmail.com -u alphabird727 -p 'ghost123!@#'
         - echo "Ignoring default CircleCI dependencies"
