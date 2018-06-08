@@ -36,6 +36,6 @@ deployment:
         - echo export DOCKER_CERT_PATH=$(echo $DOCKER_CERT_PATH_PROD) >> ~/.circlerc
         #- docker pull heybuddy:latest
         - git clone git@github.com:alpha-bird/heybuddy-backend.git
-        - sudo cp -i heybuddy-backend/.docker/machine ~/.docker/
+        - sudo cp -r heybuddy-backend/.docker/* ~/.docker/
         - docker-machine ls
         #- docker-compose -f heybuddy-backend/docker-compose.yml up -d
