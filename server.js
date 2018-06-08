@@ -90,6 +90,7 @@ wss.on('connection', wsHandler);
 // start our server
 server.listen(app_config.APP_PORT, () => {
     //Database connecting
+    /*
     const options = {
         autoIndex: false, // Don't build indexes
         reconnectTries: 30, // Retry up to 30 times
@@ -101,7 +102,7 @@ server.listen(app_config.APP_PORT, () => {
     
     const connectWithRetry = () => {
         console.log('MongoDB connection with retry')
-        mongo.connect("mongodb://mongo:27017/heybuddy", options).then(()=>{
+        mongo.connect("mongodb://localhost/heybuddy", options).then(()=>{
             console.log('MongoDB is connected')
         }).catch(err=>{
             console.log('MongoDB connection unsuccessful, retry after 5 seconds.')
@@ -110,7 +111,7 @@ server.listen(app_config.APP_PORT, () => {
     }
     
     connectWithRetry()
-    /*
+    */
     mongo.connect( app_config.DB_URI,{
             auth: {
                 user: app_config.DB_USER,
@@ -122,5 +123,4 @@ server.listen(app_config.APP_PORT, () => {
             console.log(`App is listening on http://localhost:${app_config.APP_PORT}`); 
         })
         .catch( (err) => { console.error(err) });
-        */
 });
