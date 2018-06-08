@@ -1,6 +1,6 @@
 machine:
     pre:
-        - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
+        - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.13.0
     services:
         - docker
     python:
@@ -8,9 +8,8 @@ machine:
 
 dependencies:
     override:
-        - curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
-        - chmod +x ~/docker-compose
-        - sudo mv ~/docker-compose /usr/local/bin/docker-compose
+        - pip install docker-compose
+        - docker --version
         - docker-compose --version
         - docker build --rm=false -t heybuddy .
         #- docker login -e alpha.birdprime@gmail.com -u alphabird727 -p 'ghost123!@#'
