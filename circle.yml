@@ -5,7 +5,6 @@ machine:
         - pyenv rehash
         - base=https://github.com/docker/machine/releases/download/v0.14.0 && curl -L $base/docker-machine-$(uname -s)-$(uname -m) >/tmp/docker-machine &&
             sudo install /tmp/docker-machine /usr/local/bin/docker-machine
-        - sudo cp -i ./.docker/machine ~/.docker/
     services:
         - docker
     python:
@@ -14,10 +13,6 @@ machine:
 dependencies:
     override:
         #- pip install docker-compose
-        - docker --version
-        - docker-compose --version
-        - docker-machine --version
-        - docker-machine ls
         - docker build --rm=false -t heybuddy .
         #- docker login -e alpha.birdprime@gmail.com -u alphabird727 -p 'ghost123!@#'
         - echo "Ignoring default CircleCI dependencies"
@@ -41,4 +36,6 @@ deployment:
         - echo export DOCKER_CERT_PATH=$(echo $DOCKER_CERT_PATH_PROD) >> ~/.circlerc
         #- docker pull heybuddy:latest
         - git clone git@github.com:alpha-bird/heybuddy-backend.git
-        - docker-compose -f heybuddy-backend/docker-compose.yml up -d
+        - sudo cp -i heybuddy-backend/.docker/machine ~/.docker/
+        - docker-machine ls
+        #- docker-compose -f heybuddy-backend/docker-compose.yml up -d
