@@ -1,5 +1,5 @@
 const App_Settings = {
-    APP_PORT : process.env.PORT || process.env.APP_PORT || 8080,
+    APP_PORT : process.env.PORT || process.env.APP_PORT || 3000,
     
     DB_URI : process.env.DB_URI || '',
     DB_USER : process.env.DB_USER || '',

@@ -26,6 +26,6 @@ module.exports = ( router ) => {
     router.post( '/user/changepassword', userController.changePassword);
     router.post( '/user/signup', userController.signUp );
     router.post( '/user/setavailability', userController.setAvailability);
-    router.post( '/user/setlocations', _AuthCheck, userController.setLocations);
+    router.post( '/user/setcompanies', _AuthCheck, userController.setCompanies);
     router.post( '/user/profile', _AuthCheck, userController.getProfile );
 }

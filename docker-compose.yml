@@ -1,32 +1,18 @@
-version: '3'
+version: "3"
 services:
     server:
-        build: server
-        command: sh -c 'npm install && nodemon --config nodemon.json .'
-        volumes:
-            - "./server/config:/src/config"
-            - "./server:/src/server"
-            - "./node_modules:/src/node_modules"
+        build: ./
+        command: sh -c 'npm install && npm start'
         ports:
-            - 4444:3000
+            - 3000:3000
         depends_on:
             - mongo
         environment:
             - NODE_ENV=development
     mongo:
+        container_name: mongo
         image: mongo
+        volumes:
+            - ./temp:/data/db
         ports:
-            - 27017:27017
-        volumes:
-            - ./data:/data/db
-    queue_processor:
-        build:
-        context: server
-        dockerfile: Dockerfile
-        links:
-            - mongo
-        volumes:
-            - "./server:/src"
-        environment:
-            - NODE_ENV=development
-        command: npm run queue
+            - "27017:27017"
