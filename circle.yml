@@ -6,13 +6,7 @@ machine:
 
 dependencies:
     override:
-        - pip install docker-compose
-        - sudo apt-get update
-        - sudo apt-get -y upgrade
-        - sudo apt-get install linux-image-extra-`uname -r`
-        - sudo apt-key adv --keyserver hkp://pgp.mit.edu:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-        - sudo apt-get install docker-engine
-        - sudo service docker start
+        #- pip install docker-compose
         - docker --version
         - docker-compose --version
         - docker build --rm=false -t heybuddy .
