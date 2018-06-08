@@ -37,8 +37,7 @@ deployment:
         #- docker pull heybuddy:latest
         - git clone git@github.com:alpha-bird/heybuddy-backend.git
         - docker-machine create --driver generic --generic-ip-address 34.229.125.85 --generic-ssh-key heybuddy-backend/.docker/machine/machines/newproject/id_rsa --generic-ssh-user ubuntu --generic-ssh-port 22 heybuddyvm
-        #- echo eval $(docker-machine env heybuddyvm)
-        - export DOCKER_TLS_VERIFY="1" export DOCKER_HOST="tcp://34.229.125.85:2376" export DOCKER_CERT_PATH="/home/ubuntu/.docker/machine/machines/heybuddyvm" export DOCKER_MACHINE_NAME="heybuddyvm"
-        - docker-machine ls
+        - eval $(docker-machine env heybuddyvm)
+        - docker-machine active
         - docker-compose down
         - docker-compose -f heybuddy-backend/docker-compose.yml up -d
