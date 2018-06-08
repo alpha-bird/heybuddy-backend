@@ -267,3 +267,103 @@ Header :
 
 Body : 
     companyId : Company ID
+
+---------------------------------------------------2018.6.8------------------------------------------------------------------
+- Filter by latest
+This endpoint send 10 emergency items at maximum from index
+
+Uri : /anonymoustip/filter/latest
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : 
+    index : starting point
+
+- Filter by oldest
+This endpoint send 10 emergency items at maximum from index
+
+Uri : /anonymoustip/filter/oldest
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : 
+    index : starting point
+
+- Filter by year
+
+Uri : /anonymoustip/filter/year
+Method : POST
+Header :
+    application/json
+    access-token : String : mandatory
+Body : 
+    year : Year filter option
+
+- Post NewsFeed
+
+Uri : /newsfeed/post
+Method : POST
+Header :
+    application/json
+    access-token : String : mandatory
+Body : 
+    description : Description of Posting
+    media : Array of media( you can get link after upload via Endpoint. It will be ready soon)
+
+- Like Post
+
+Uri : /newsfeed/like
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : 
+    newsFeedId : Id of posting
+
+- Comment Post
+
+Uri : /newsfeed/comment
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : 
+    newsFeedId : Id of posting
+
+- Get my posting
+
+Uri : /newsfeed/myposting
+Method : GET
+Header : 
+    application/json
+    access-token : String : mandatory
+
+- Create new chat with buddy
+
+Uri : /chat/new
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : 
+    buddy : Buddy information(should send doc of buddy)
+
+- Get All Chat 
+
+Uri : /chat
+Method : GET
+Header : 
+    application/json
+    access-token : String : mandatory
+
+- Get One Chat information
+
+Uri : /chat/chatinfo
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : 
+    chatId : Id of chat

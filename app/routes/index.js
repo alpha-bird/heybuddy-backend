@@ -5,7 +5,8 @@ const express = require('express'),
     companyRouter = require('./company')
     chatRouter = require('./chat'),
     incidentRouter = require('./incident'),
-    anonymoustipRouter = require('./anonymoustip')
+    anonymoustipRouter = require('./anonymoustip'),
+    newsfeedRouter = require('./newsfeed')
 
 //export router
 module.exports = router;
@@ -20,3 +21,4 @@ companyRouter(router);
 chatRouter(router);
 incidentRouter(router);
 anonymoustipRouter(router)
+newsfeedRouter(router)

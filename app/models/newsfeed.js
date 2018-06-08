@@ -20,12 +20,24 @@ const newsfeedSchema = new Schema({
         default : []
     },
     likes : {
-        type : Number,
-        default : 0
+        count : {
+            type : Number,
+            default : 0
+        },
+        likedBy : {
+            type : Array,
+            default : []
+        }
     },
     comments : {
-        type : Number,
-        default : 0
+        count : {
+            type : Number,
+            default : 0
+        },
+        commentedBy : {
+            type : Array,
+            default : []
+        }
     }
 });
 
@@ -52,4 +64,14 @@ newsfeedModel.findOneById = function( id ) {
         });
     });
 }
-module.exports = chatModel;
+
+newsfeedModel.findAllCreatedBySomeone = function( userId ) {
+    return new Promise( ( resolve, reject ) => { 
+        newsfeedModel.findOne({ createdBy : userId }, (err, newsfeeds) => {
+            if(err) reject(err);
+            else resolve(newsfeeds);
+        });
+    });
+}
+
+module.exports = newsfeedModel;

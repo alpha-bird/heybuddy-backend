@@ -111,6 +111,14 @@ const userSchema = new Schema({
         type : Array,
         default : []
     },
+    likePostings : {
+        type : Array,
+        default : []
+    },
+    commentedPostings : {
+        type : Array,
+        default : []
+    },
     chats : {
         type : Array,
         default : []
