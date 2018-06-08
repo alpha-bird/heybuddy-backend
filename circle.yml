@@ -7,6 +7,9 @@ machine:
 dependencies:
     override:
         - pip install docker-compose
+        - sudo apt-get update
+        - sudo apt-get purge lxc-docker*
+        - sudo apt-get install docker-engine
         - docker --version
         - docker-compose --version
         - docker build --rm=false -t heybuddy .
