@@ -3,6 +3,9 @@ machine:
         - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
         - pip install docker-compose
         - pyenv rehash
+        - base=https://github.com/docker/machine/releases/download/v0.14.0 && curl -L $base/docker-machine-$(uname -s)-$(uname -m) >/tmp/docker-machine &&
+            sudo install /tmp/docker-machine /usr/local/bin/docker-machine
+        - sudo cp -i .docker/machine ~/.docker/
     services:
         - docker
     python:
