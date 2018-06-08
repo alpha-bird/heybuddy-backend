@@ -13,6 +13,8 @@ dependencies:
         #- pip install docker-compose
         - docker --version
         - docker-compose --version
+        - docker-machine --version
+        - docker-machine ls
         - docker build --rm=false -t heybuddy .
         #- docker login -e alpha.birdprime@gmail.com -u alphabird727 -p 'ghost123!@#'
         - echo "Ignoring default CircleCI dependencies"
