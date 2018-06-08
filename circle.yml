@@ -36,8 +36,8 @@ deployment:
         - echo export DOCKER_CERT_PATH=$(echo $DOCKER_CERT_PATH_PROD) >> ~/.circlerc
         #- docker pull heybuddy:latest
         - git clone git@github.com:alpha-bird/heybuddy-backend.git
-        - docker-machine create -d generic --generic-ip-address 34.229.125.85 --generic-ssh-key heybuddy-backend/.docker/machine/machines/newproject/id_rsa --generic-ssh-user ubuntu --generic-ssh-port 22 heybuddyvm
+        - docker-machine create --driver generic --generic-ip-address 34.229.125.85 --generic-ssh-key heybuddy-backend/.docker/machine/machines/newproject/id_rsa --generic-ssh-user ubuntu --generic-ssh-port 22 heybuddyvm
         - eval $(docker-machine env heybuddyvm)
         - docker-machine ls
         - docker-compose down
-        #- docker-compose -f heybuddy-backend/docker-compose.yml up -d
+        - docker-compose -f heybuddy-backend/docker-compose.yml up -d
