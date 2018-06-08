@@ -13,7 +13,7 @@ machine:
 dependencies:
     override:
         #- pip install docker-compose
-        - docker build --rm=false -t heybuddy .
+        #- docker build --rm=false -t heybuddy .
         #- docker login -e alpha.birdprime@gmail.com -u alphabird727 -p 'ghost123!@#'
         - echo "Ignoring default CircleCI dependencies"
 
@@ -26,18 +26,18 @@ deployment:
     branch: master
     commands:
         #- docker push heybuddy:latest
-        - echo '-----BEGIN CERTIFICATE-----' >> ca.pem
-            && echo $DOCKER_PROD_CAPEM | sed -e 's/\s\+/\n/g' >> ca.pem
-            && echo '-----END CERTIFICATE-----' >> ca.pem
-            && touch $DOCKER_CERT_PATH/ca.pem
-            && mv ca.pem $DOCKER_CERT_PATH/ca.pem
-        - echo export DOCKER_TLS_VERIFY=$(echo $DOCKER_TLS_VERIFY_PROD) >> ~/.circlerc
-        - echo export DOCKER_HOST=$(echo $DOCKER_HOST_PROD) >> ~/.circlerc
-        - echo export DOCKER_CERT_PATH=$(echo $DOCKER_CERT_PATH_PROD) >> ~/.circlerc
+        #- echo '-----BEGIN CERTIFICATE-----' >> ca.pem
+         #   && echo $DOCKER_PROD_CAPEM | sed -e 's/\s\+/\n/g' >> ca.pem
+          #  && echo '-----END CERTIFICATE-----' >> ca.pem
+           # && touch $DOCKER_CERT_PATH/ca.pem
+           # && mv ca.pem $DOCKER_CERT_PATH/ca.pem
+        #- echo export DOCKER_TLS_VERIFY=$(echo $DOCKER_TLS_VERIFY_PROD) >> ~/.circlerc
+        #- echo export DOCKER_HOST=$(echo $DOCKER_HOST_PROD) >> ~/.circlerc
+        #- echo export DOCKER_CERT_PATH=$(echo $DOCKER_CERT_PATH_PROD) >> ~/.circlerc
         #- docker pull heybuddy:latest
         - git clone git@github.com:alpha-bird/heybuddy-backend.git
         - docker-machine create --driver generic --generic-ip-address 34.229.125.85 --generic-ssh-key heybuddy-backend/.docker/machine/machines/newproject/id_rsa --generic-ssh-user ubuntu --generic-ssh-port 22 heybuddyvm
-        - eval $(docker-machine env heybuddyvm)
+        - echo eval $(docker-machine env heybuddyvm)
         - docker-machine ls
         - docker-compose down
         - docker-compose -f heybuddy-backend/docker-compose.yml up -d
