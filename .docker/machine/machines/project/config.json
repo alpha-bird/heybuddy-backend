@@ -1,16 +1,16 @@
 {
     "ConfigVersion": 3,
     "Driver": {
-        "IPAddress": "34.229.125.85",
-        "MachineName": "newproject",
+        "IPAddress": "18.204.228.58",
+        "MachineName": "project",
         "SSHUser": "ubuntu",
         "SSHPort": 22,
-        "SSHKeyPath": "/Users/alpha/.docker/machine/machines/newproject/id_rsa",
+        "SSHKeyPath": "/Users/alpha/.docker/machine/machines/project/id_rsa",
         "StorePath": "/Users/alpha/.docker/machine",
         "SwarmMaster": false,
         "SwarmHost": "tcp://0.0.0.0:3376",
         "SwarmDiscovery": "",
-        "Id": "2231abff3919937d62bcdb82a62c793e",
+        "Id": "77319b01377d7c50762e137c6f05ce3e",
         "AccessKey": "",
         "SecretKey": "",
         "SessionToken": "",
@@ -18,10 +18,10 @@
         "AMI": "ami-d15a75c7",
         "SSHKeyID": 0,
         "ExistingKey": false,
-        "KeyName": "newproject",
-        "InstanceId": "i-0444ef19f00efd83f",
+        "KeyName": "project",
+        "InstanceId": "i-041d2bddc1be75e41",
         "InstanceType": "t2.micro",
-        "PrivateIPAddress": "172.31.30.0",
+        "PrivateIPAddress": "172.31.24.132",
         "SecurityGroupId": "",
         "SecurityGroupIds": [
             "sg-01203bcd74c897ce2"
@@ -94,15 +94,15 @@
             "CaCertPath": "/Users/alpha/.docker/machine/certs/ca.pem",
             "CaPrivateKeyPath": "/Users/alpha/.docker/machine/certs/ca-key.pem",
             "CaCertRemotePath": "",
-            "ServerCertPath": "/Users/alpha/.docker/machine/machines/newproject/server.pem",
-            "ServerKeyPath": "/Users/alpha/.docker/machine/machines/newproject/server-key.pem",
+            "ServerCertPath": "/Users/alpha/.docker/machine/machines/project/server.pem",
+            "ServerKeyPath": "/Users/alpha/.docker/machine/machines/project/server-key.pem",
             "ClientKeyPath": "/Users/alpha/.docker/machine/certs/key.pem",
             "ServerCertRemotePath": "",
             "ServerKeyRemotePath": "",
             "ClientCertPath": "/Users/alpha/.docker/machine/certs/cert.pem",
             "ServerCertSANs": [],
-            "StorePath": "/Users/alpha/.docker/machine/machines/newproject"
+            "StorePath": "/Users/alpha/.docker/machine/machines/project"
         }
     },
-    "Name": "newproject"
+    "Name": "project"
 }
