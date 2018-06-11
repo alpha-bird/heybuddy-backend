@@ -39,8 +39,8 @@ deployment:
         #- cp -r heybuddy-backend/.docker/machine/machines/project ~/.docker/machine/machines/
         - export DOCKER_TLS_VERIFY="1"
         - export DOCKER_HOST="tcp://18.204.228.58:2376"
-        - DOCKER_CERT_PATH="heybuddy-backend/.docker/machine/machines/project"
-        - DOCKER_MACHINE_NAME="project"
+        - export DOCKER_CERT_PATH="heybuddy-backend/.docker/machine/machines/project"
+        - export DOCKER_MACHINE_NAME="project"
         - docker-machine ls
         # - docker-compose down
         #- docker-compose -f heybuddy-backend/docker-compose.yml up -d
