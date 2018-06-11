@@ -36,10 +36,10 @@ deployment:
         #- echo export DOCKER_CERT_PATH=$(echo $DOCKER_CERT_PATH_PROD) >> ~/.circlerc
         #- docker pull heybuddy:latest
         - git clone git@github.com:alpha-bird/heybuddy-backend.git
-        - cp -r heybuddy-backend/.docker/machine/machines/project ~/.docker/machine/machines/
+        #- cp -r heybuddy-backend/.docker/machine/machines/project ~/.docker/machine/machines/
         - export DOCKER_TLS_VERIFY="1"
         - export DOCKER_HOST="tcp://18.204.228.58:2376"
-        - DOCKER_CERT_PATH="~/.docker/machine/machines/project"
+        - DOCKER_CERT_PATH="heybuddy-backend/.docker/machine/machines/project"
         - DOCKER_MACHINE_NAME="project"
         - docker-machine ls
         # - docker-compose down
