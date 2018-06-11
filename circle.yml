@@ -39,7 +39,7 @@ deployment:
         #- cp -r heybuddy-backend/.docker/machine/machines/project ~/.docker/machine/machines/
         - export DOCKER_TLS_VERIFY="1"
         - export DOCKER_HOST="tcp://18.204.228.58:2376"
-        - export DOCKER_CERT_PATH="heybuddy-backend/.docker/machine/machines/project"
+        - cp "heybuddy-backend/.docker/machine/machines/project/ca.pem" $DOCKER_CERT_PATH/ca.pem
         - export DOCKER_MACHINE_NAME="project"
         - docker-machine ls
         # - docker-compose down
