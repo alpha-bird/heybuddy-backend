@@ -1,8 +1,13 @@
 const _AnonymousTip = require('../models/anonymoustip'),
       _User = require('../models/user'),
       wrapper = require('co-express'),
-      utilities = require('../lib/utilities'),
+      config = require('../config'),
+      utilies = require('../lib/utilities'),
+      AWS = require('aws-sdk'),
+      S3 = new AWS.S3(),
       moment = require('moment');
+
+AWS.config.update({ accessKeyId: config.AWS_ACCESS_KEY_ID, secretAccessKey: config.AWS_SECRET_ACCESS_KEY, region: 'us-east-1' });
 
 const anonymoustipModule = {
     createAnonymousTip : wrapper(function*(req, res) {
@@ -106,6 +111,29 @@ const anonymoustipModule = {
             }
         }
         res.send({ success : true, anonymoustips : filterdTips })
+    }),
+
+    uploadMedia : wrapper(function*(req, res) {
+        var anonymoustip_media_bucket = 'anonymoustip-media';
+        var key = utilies.getBlobNameWillUpload() + `.${req.body.filetype}`;
+        var data = req.body.content;
+        var params = { 
+            Bucket: anonymoustip_media_bucket, 
+            Key: key, 
+            Body: data,
+            ACL : 'public-read'
+        };
+        var upload = ( params ) => {
+            return new Promise((resolve, reject) => {
+                S3.putObject(params, (err, data) => {
+                    if(err) reject(err)
+                    else resolve(data)
+                })
+            })
+        }
+
+        var status = yield upload(params)
+        res.send({ success : true, data : status })
     })
 }
 

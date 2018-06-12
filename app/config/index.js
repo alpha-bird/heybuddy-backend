@@ -8,8 +8,8 @@ const App_Settings = {
     SALT_ROUNDS : process.env.SALT_ROUNDS || 10,
     APP_SECRET : process.env.APP_SECRET || 'buddysecret',
 
-    AZURE_CONNECTION : process.env.AZURE_CONNECTION || '',
-    AZURE_BLOB_URL : process.env.AZURE_BLOB_URL || '',
+    AWS_ACCESS_KEY_ID : process.env.AWS_ACCESS_KEY_ID || '',
+    AWS_SECRET_ACCESS_KEY : process.env.AWS_SECRET_ACCESS_KEY || '',
 
     PUBNUB_AUTH_KEY : process.env.PUBNUB_AUTH_KEY || 'server-auth',
     PUBNUB_SUBSCRIBE_KEY : process.env.PUBNUB_SUBSCRIBE_KEY || '',

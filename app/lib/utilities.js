@@ -69,29 +69,6 @@ const Utilities = {
             var utcStr = date.toUTCString();
             
             return base64.encode(utcStr);
-        },
-    //Upload media
-    uploadMedia : (type, data, extendType) => {
-            return new Promise((resolve, reject) => {
-                if( type && data ) {
-                    var blobService = azure.createBlobService(Config.AZURE_CONNECTION);
-                    var blobName = Utilities.getBlobNameWillUpload() + '.' + extendType;
-                    
-                    var decodedData = Buffer.from(data, 'base64');
-                    blobService.createBlockBlobFromText(type, blobName, decodedData, function(error, result, response){
-                        if( !error ) {
-                            var blobUrl = Config.AZURE_BLOB_URL + type + '/' + blobName;
-                            resolve(blobUrl);
-                        }
-                        else {
-                            resolve('');
-                        }
-                    });
-                }
-                else {
-                    resolve('');
-                }
-            })
         }
 }
 

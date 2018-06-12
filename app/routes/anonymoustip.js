@@ -11,4 +11,5 @@ module.exports = ( router ) => {
     router.post('/anonymoustip/filter/latest', _AuthCheck, anonymoustipController.getAnonymousTipLatest);
     router.post('/anonymoustip/filter/oldest', _AuthCheck, anonymoustipController.getAnonymousTipOldest);
     router.post('/anonymoustip/filter/year', _AuthCheck, anonymoustipController.getAnonymousTipByYear);
+    router.post('/anonymoustip/media/upload', _AuthCheck, anonymoustipController.uploadMedia);
 }

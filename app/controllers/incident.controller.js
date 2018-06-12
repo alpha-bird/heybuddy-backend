@@ -40,6 +40,29 @@ const incidentModule = {
             data : incidents,
             length : incidents.length
         })
+    }),
+
+    uploadMedia : wrapper(function*(req, res) {
+        var incident_media_bucket = 'incident-media';
+        var key = utilies.getBlobNameWillUpload() + `.${req.body.filetype}`;
+        var data = req.body.content;
+        var params = { 
+            Bucket: incident_media_bucket, 
+            Key: key, 
+            Body: data,
+            ACL : 'public-read'
+        };
+        var upload = ( params ) => {
+            return new Promise((resolve, reject) => {
+                S3.putObject(params, (err, data) => {
+                    if(err) reject(err)
+                    else resolve(data)
+                })
+            })
+        }
+
+        var status = yield upload(params)
+        res.send({ success : true, data : status })
     })
 }
 

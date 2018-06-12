@@ -72,6 +72,28 @@ const newsFeedModule = {
             var newsFeeds = yield _NewsFeed.findAllCreatedBySomeone( user._id )
 
             res.send({ success : true, list : newsFeeds })
+        }),
+    uploadMedia : wrapper(function*(req, res) {
+            var newsfeed_media_bucket = 'newsfeed-media';
+            var key = utilies.getBlobNameWillUpload() + `.${req.body.filetype}`;
+            var data = req.body.content;
+            var params = { 
+                Bucket: newsfeed_media_bucket, 
+                Key: key, 
+                Body: data,
+                ACL : 'public-read'
+            };
+            var upload = ( params ) => {
+                return new Promise((resolve, reject) => {
+                    S3.putObject(params, (err, data) => {
+                        if(err) reject(err)
+                        else resolve(data)
+                    })
+                })
+            }
+
+            var status = yield upload(params)
+            res.send({ success : true, data : status })
         })
 }
 

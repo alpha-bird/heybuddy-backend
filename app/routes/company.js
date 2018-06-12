@@ -5,4 +5,5 @@ module.exports = ( router ) => {
     router.post('/company/create', _AuthCheck, companyController.createCompany);
     router.get('/company/getcompanies', companyController.getAllCompanies);
     router.post('/company/info', _AuthCheck, companyController.getCompanyInfo);
+    router.post('/company/media/upload', companyController.uploadMedia);
 }

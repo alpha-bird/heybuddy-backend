@@ -16,16 +16,11 @@ const userModule = {
     pushid : push token
     */
     signUp : wrapper( function*(req, res) {
-            const { email, password, pin, profile, pushId, avatarData, avatarExtend } = req.body
+            const { email, password, pin, profile, pushId } = req.body
             var hashedPassword = yield utilities.getHashPassword( password ) //Hash Password
             
             var newNotification = new _Notification( ) //New Empty Notification Document
             yield newNotification.saveToDataBase()
-
-            if ( avatarData && avatarExtend ) {
-                var avatarUrl = yield utilities.uploadMedia( 'profile', avatarData, avatarExtend )
-                profile.avatarUrl = avatarUrl
-            }
 
             var newUser = new _User({
                 email : email,
@@ -335,6 +330,28 @@ const userModule = {
             else {
                 res.send({ success : false, error : { message : 'failed because of user not found' }, message : 'User not found!' })
             }
+        }),
+    uploadMedia : wrapper(function*(req, res) {
+            var profile_media_bucket = 'heybuddy-profile-media';
+            var key = utilies.getBlobNameWillUpload() + `.${req.body.filetype}`;
+            var data = req.body.content;
+            var params = { 
+                Bucket: profile_media_bucket, 
+                Key: key, 
+                Body: data,
+                ACL : 'public-read'
+            };
+            var upload = ( params ) => {
+                return new Promise((resolve, reject) => {
+                    S3.putObject(params, (err, data) => {
+                        if(err) reject(err)
+                        else resolve(data)
+                    })
+                })
+            }
+
+            var status = yield upload(params)
+            res.send({ success : true, data : status })
         })
 }
 

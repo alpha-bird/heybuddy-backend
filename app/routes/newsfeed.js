@@ -6,4 +6,5 @@ module.exports = ( router ) => {
     router.post('/newsfeed/like', _AuthCheck, newsfeedController.likePost);
     router.post('/newsfeed/comment', _AuthCheck, newsfeedController.commentPost);
     router.get('/newsfeed/myposting', _AuthCheck, newsfeedController.getNewsFeedCreatedByMe);
+    router.post('/newsfeed/media/upload', _AuthCheck, newsfeedController.uploadMedia);
 }
