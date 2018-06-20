@@ -66,6 +66,14 @@ incidentSchema.methods.updateField = function( key, value ) {
     this[key] = value;
 }
 
+incidentSchema.methods.search = function( content ) {
+    return this.createdTime.includes(content) ||
+           this.description.includes(content) || 
+           this.reporter.email.includes(content) || 
+           this.reporter.firstname.includes(content) || 
+           this.reporter.lastname.includes(content)
+}
+
 const incidentModel = mongoose.model('incident', incidentSchema);
 
 incidentModel.getAllIncidents = function( ) {
@@ -73,6 +81,20 @@ incidentModel.getAllIncidents = function( ) {
         incidentModel.find({}, (error, incidents) => {
             if(error) reject(error);
             else resolve(incidents);
+        });
+    } );
+}
+
+incidentModel.search = function( content ) {
+    return new Promise( (resolve, reject) => {
+        incidentModel.find({}, (error, incidents) => {
+            if(error) reject(error);
+            else {
+                var filteredIncidents = incidents.filter( value => {
+                    return value.search(content)
+                })
+                resolve(filteredIncidents);
+            }
         });
     } );
 }

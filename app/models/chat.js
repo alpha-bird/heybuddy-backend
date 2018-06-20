@@ -32,6 +32,10 @@ chatSchema.methods.saveToDataBase = function( ) {
     });
 }
 
+chatSchema.methods.search = function( content ) {
+    return false;
+}
+
 const chatModel = mongoose.model('chat', chatSchema);
 
 chatModel.findOneById = function( id ) {
@@ -41,5 +45,19 @@ chatModel.findOneById = function( id ) {
             else resolve(res);
         });
     });
+}
+
+chatModel.search = function( content ) {
+    return new Promise( (resolve, reject) => {
+        chatModel.find({}, (error, chats) => {
+            if(error) reject(error);
+            else {
+                var filteredChats = chats.filter( value => {
+                    return value.search(content)
+                })
+                resolve(filteredChats);
+            }
+        });
+    } );
 }
 module.exports = chatModel;

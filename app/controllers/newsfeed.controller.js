@@ -73,6 +73,11 @@ const newsFeedModule = {
 
             res.send({ success : true, list : newsFeeds })
         }),
+    getAllNewsFeed : wrapper(function*(req, res) {
+            var newsFeeds = yield _NewsFeed.findAll()
+
+            res.send({ success : true, newfeed : newsFeeds })
+        }),
     uploadMedia : wrapper(function*(req, res) {
             var newsfeed_media_bucket = 'newsfeed-media';
             var key = utilies.getBlobNameWillUpload() + `.${req.body.filetype}`;

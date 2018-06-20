@@ -31,6 +31,10 @@ companySchema.methods.updateField = function( key, value ) {
     this[key] = value;
 }
 
+companySchema.methods.search = function( content ) {
+    return this.companyName.includes(content) ||  this.office_phone.includes(content) || this.email.includes(content)
+}
+
 const companyModel = mongoose.model('company', companySchema);
 
 companyModel.getAllCompanies = function( ) {
@@ -49,6 +53,20 @@ companyModel.findOneById = function( id ) {
             else resolve(res);
         });
     });
+}
+
+companyModel.search = function( content ) {
+    return new Promise( (resolve, reject) => {
+        companyModel.find({}, (error, companies) => {
+            if(error) reject(error);
+            else {
+                var filteredCompanies = companies.filter( value => {
+                    return value.search(content);
+                })
+                resolve(filteredCompanies);
+            }
+        });
+    } );
 }
 
 module.exports = companyModel;

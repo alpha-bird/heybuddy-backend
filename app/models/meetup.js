@@ -37,11 +37,29 @@ const meetupSchema = new Schema({
         type : String,
         default : ''
     },
+    location : {
+        latitude : {
+            type : Number,
+            default : 0
+        },
+        longitude : {
+            type : Number,
+            default : 0
+        }
+    },
+    photos : {
+        type : Array,
+        default : []
+    },
+    videos : {
+        type : Array,
+        default : []
+    },
     createdTime : {
         type : String,
         default : ''
     },
-    organizer : {
+    createdBy : {
         type : Schema.Types.ObjectId,
         required : true
     },
@@ -89,6 +107,51 @@ meetupSchema.methods.saveToDataBase = function( ) {
     });
 }
 
+meetupSchema.methods.search = function( content ) {
+    return this.title.includes(content) ||  this.description.includes(content) || this.createdTime.includes(content);
+}
+
 const meetupModel = mongoose.model('meetup', meetupSchema);
+
+meetupModel.findOneById = function( meetupId ) {
+    return new Promise( (resolve, reject) => {
+        meetupModel.findOne( { _id : meetupId }, (error, meetup) => {
+            if(error) reject(error)
+            else resolve(meetup)
+        })
+    })
+}
+
+meetupModel.findAllPublic = function( ) {
+    return new Promise( (resolve, reject) => {
+        meetupModel.find( { ispublic : true }, (error, meetups) => {
+            if(error) reject(error)
+            else resolve(meetups)
+        })
+    })
+}
+
+meetupModel.findAll = function( ) {
+    return new Promise( (resolve, reject) => {
+        meetupModel.find( { }, (error, meetups) => {
+            if(error) reject(error)
+            else resolve(meetups)
+        })
+    })
+}
+
+meetupModel.search = function( content ) {
+    return new Promise( (resolve, reject) => {
+        meetupModel.find({}, (error, meetups) => {
+            if(error) reject(error);
+            else {
+                var filteredMeetups = meetups.filter( value => {
+                    return value.search(content)
+                })
+                resolve(filteredMeetups);
+            }
+        });
+    } );
+}
 
 module.exports = meetupModel;

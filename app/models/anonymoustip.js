@@ -57,6 +57,10 @@ anonymousTipSchema.methods.saveToDataBase = function( ) {
     });
 }
 
+anonymousTipSchema.methods.search = function( content ) {
+    return this.incidentCategory.includes(content) || this.description.includes(content) || this.createdTime.includes(content) 
+}
+
 const anonymousTipModel = mongoose.model('anonymoustip', anonymousTipSchema);
 
 anonymousTipModel.findAllByUserID = function( userId ) {
@@ -91,6 +95,20 @@ anonymousTipModel.findByCategory = function( category ) {
         anonymousTipModel.find({ incidentCategory : category }, (error, tips) => {
             if(error) reject(error);
             else resolve(tips);
+        });
+    } );
+}
+
+anonymousTipModel.search = function( content ) {
+    return new Promise( (resolve, reject) => {
+        anonymousTipModel.find({}, (error, tips) => {
+            if(error) reject(error);
+            else {
+                var filteredTips = tips.filter( value => {
+                    return value.search(content)
+                })
+                resolve(filteredTips);
+            }
         });
     } );
 }

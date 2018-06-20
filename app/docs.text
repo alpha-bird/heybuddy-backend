@@ -367,3 +367,104 @@ Header :
     access-token : String : mandatory
 Body : 
     chatId : Id of chat
+
+-------------------------------------------------------------------------------------
+
+- Meetup Create
+
+Uri : /meetup/create
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : 
+    meetupInfo : {
+
+    }
+
+- Get Public Meetups
+
+Uri : /meetup/public
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+
+- Get All Meetups
+
+Uri : /meetups
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+
+- Goto the Meetup
+
+Uri : /meetup/goto
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : 
+    meetupId : Id of Meetup
+    
+- Create Poll
+
+Uri : /meetup/poll/create
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : 
+    meetupId : Id of meetup
+    poll : true/false Poll Result
+
+- Add Buddy
+
+Uri : /meetup/addbuddy
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body :
+    meetupId : Id of meetup
+    buddies : Array of Buddy
+
+- Upload Media for meetup
+
+Uri : /meetup/media/upload
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : 
+    filetype : Extend of file
+    conent : Content of file
+
+- Search
+
+Uri : /search
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : 
+    content : Search String
+
+-----------------Analytics-------------------
+GET Data for box 1
+GET Data for box 2
+GET Data for box 3
+GET Data for box 4
+
+GET Posts from feed
+
+GET Todos
+POST Add todo
+POST Delete todo
+
+GET Chart data
+
+GET Calendar events
+POST Add calendar event
+POST Delete calendar event

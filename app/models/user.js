@@ -1,5 +1,4 @@
 const mongoose = require('mongoose'),
-      wrapper = require('co-express'),
       _Notification = require('../models/notification'),
       moment = require('moment'),
       Schema = mongoose.Schema;
@@ -158,6 +157,15 @@ userSchema.methods.saveToDataBase = function( ) {
     });
 }
 
+userSchema.methods.search = function( content ) {
+    return this.email.includes(content) || 
+        this.userType.includes(content) || 
+        this.profile.firstName.includes(content) || 
+        this.profile.lastName.includes(content) ||
+        this.profile.phoneNumber.includes(content) ||
+        this.profile.dateOfBirth.includes(content) 
+}
+
 // create the model
 const userModel = mongoose.model('user', userSchema);
 
@@ -300,6 +308,20 @@ userModel.upsertTwitterUser = function(token, tokenSecret, profile, cb) {
         }
     }));
 };
+
+userModel.search = function( content ) {
+    return new Promise( (resolve, reject) => {
+        userModel.find({}, (error, users) => {
+            if(error) reject(error);
+            else {
+                var filteredUsers = users.filter( value => {
+                    return value.search(content)
+                })
+                resolve(filteredUsers);
+            }
+        });
+    } );
+}
 
 // export the model
 module.exports = userModel;

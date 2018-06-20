@@ -54,6 +54,10 @@ newsfeedSchema.methods.saveToDataBase = function( ) {
     });
 }
 
+newsfeedSchema.methods.search = function( content ) {
+    return this.description.includes(content) || this.createdTime.includes(content);
+}
+
 const newsfeedModel = mongoose.model('newsfeed', newsfeedSchema);
 
 newsfeedModel.findOneById = function( id ) {
@@ -65,6 +69,15 @@ newsfeedModel.findOneById = function( id ) {
     });
 }
 
+newsfeedModel.findAll = function( id ) {
+    return new Promise( ( resolve, reject ) => { 
+        newsfeedModel.findOne({ }, (err, newsfeeds) => {
+            if(err) reject(err);
+            else resolve(newsfeeds);
+        });
+    });
+}
+
 newsfeedModel.findAllCreatedBySomeone = function( userId ) {
     return new Promise( ( resolve, reject ) => { 
         newsfeedModel.findOne({ createdBy : userId }, (err, newsfeeds) => {
@@ -72,6 +85,20 @@ newsfeedModel.findAllCreatedBySomeone = function( userId ) {
             else resolve(newsfeeds);
         });
     });
+}
+
+newsfeedModel.search = function( content ) {
+    return new Promise( (resolve, reject) => {
+        newsfeedModel.find({}, (error, newsfeeds) => {
+            if(error) reject(error);
+            else {
+                var filteredNewsfeeds = newsfeeds.filter( value => {
+                    return value.search(content)
+                })
+                resolve(filteredNewsfeeds);
+            }
+        });
+    } );
 }
 
 module.exports = newsfeedModel;
