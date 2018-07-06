@@ -112,4 +112,54 @@ anonymousTipModel.search = function( content ) {
         });
     } );
 }
+
+anonymousTipModel.getNumberOfAnonymousTipCreatedLastweek = function( ) {
+    var today = moment().utc().hours(0);
+    var lastweek = moment().utc().subtract(7,'days').hours(0);
+    var lastmonth = moment().utc().subtract(30,'days').hours(0);
+
+    return new Promise( (resolve, reject) => {
+        anonymousTipModel.find({}, (error, tips) => {
+            if(error) reject(error);
+            else {
+                var filteredAnonymousTip = tips.filter( value => {
+                    return moment(value.createdTime) > lastweek && moment(value.createdTime) < today
+                })
+                resolve(filteredAnonymousTip.length);
+            }
+        });
+    } );
+}
+
+anonymousTipModel.getNumberOfAnonymousTipCreatedLastmonth = function( ) {
+    var today = moment().utc().hours(0);
+    var lastweek = moment().utc().subtract(7,'days').hours(0);
+    var lastmonth = moment().utc().subtract(30,'days').hours(0);
+
+    return new Promise( (resolve, reject) => {
+        anonymousTipModel.find({}, (error, tips) => {
+            if(error) reject(error);
+            else {
+                var filteredAnonymousTip = tips.filter( value => {
+                    return moment(value.createdTime) > lastmonth && moment(value.createdTime) < today
+                })
+                resolve(filteredAnonymousTip.length);
+            }
+        });
+    } );
+}
+
+anonymousTipModel.getNumberOfAnonymousTipByDate = function( startDate, endDate ) {
+    return new Promise( (resolve, reject) => {
+        anonymousTipModel.find({}, (error, tips) => {
+            if(error) reject(error);
+            else {
+                var filteredAnonymousTip = tips.filter( value => {
+                    return moment(value.createdTime) > moment(startDate) && moment(value.createdTime) < moment(endDate)
+                })
+                resolve(filteredAnonymousTip.length);
+            }
+        });
+    } );
+}
 module.exports = anonymousTipModel;

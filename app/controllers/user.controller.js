@@ -27,7 +27,7 @@ const userModule = {
                 password : hashedPassword,
                 pin : pin,
                 profile : profile,
-                createdTime : moment(Date.now()).utc().format(),
+                createdTime : moment().utc().format(),
                 notificationId : newNotification._id
             }) //New User with Notification
             yield newUser.saveToDataBase()
@@ -115,7 +115,7 @@ const userModule = {
                             facebookId : facebookId
                         },
                         profile : profile,
-                        createdTime : moment(Date.now()).utc().format()
+                        createdTime : moment().utc().format()
                     }
                 )
                 newUser.updateField( 'notificationId', newNotification._id );
@@ -167,7 +167,7 @@ const userModule = {
                             googleId : googleId
                         },
                         profile : profile,
-                        createdTime : moment(Date.now()).utc().format(),
+                        createdTime : moment().utc().format(),
                     }
                 )
                 newUser.updateField( 'notificationId', newNotification._id );
@@ -352,6 +352,12 @@ const userModule = {
 
             var status = yield upload(params)
             res.send({ success : true, data : status })
+        }),
+
+    getUserProfileById : wrapper(function*(req, res) {
+            var userId = req.body.userId
+            var selectedUser = yield _User.findOneById(userId)
+            res.send({ success : true, user : selectedUser._doc , error : {}, message : '' });
         })
 }
 

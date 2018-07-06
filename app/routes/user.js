@@ -29,4 +29,5 @@ module.exports = ( router ) => {
     router.post( '/user/setcompanies', _AuthCheck, userController.setCompanies);
     router.post( '/user/profile', _AuthCheck, userController.getProfile );
     router.post( '/user/media/upload', userController.uploadMedia );
+    router.post( '/user/specific', _AuthCheck, userController.getUserProfileById);
 }

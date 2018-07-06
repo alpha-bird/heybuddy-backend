@@ -293,7 +293,7 @@ userModel.upsertTwitterUser = function(token, tokenSecret, profile, cb) {
                     avatarUrl : profile._json.profile_image_url_https
                     //position : profile._json.geo_enabled ? profile._json.status.geo,
                 },
-                createdTime : moment(Date.now()).utc().format(),
+                createdTime : moment().utc().format(),
                 notificationId : newNotification._id
             });
 
@@ -318,6 +318,56 @@ userModel.search = function( content ) {
                     return value.search(content)
                 })
                 resolve(filteredUsers);
+            }
+        });
+    } );
+}
+
+userModel.getNumberOfUserCreatedLastweek = function( ) {
+    var today = moment().utc().hours(0);
+    var lastweek = moment().utc().subtract(7,'days').hours(0);
+    var lastmonth = moment().utc().subtract(30,'days').hours(0);
+
+    return new Promise( (resolve, reject) => {
+        userModel.find({}, (error, users) => {
+            if(error) reject(error);
+            else {
+                var filteredUsers = users.filter( value => {
+                    return moment(value.createdTime) > lastweek && moment(value.createdTime) < today
+                })
+                resolve(filteredUsers.length);
+            }
+        });
+    } );
+}
+
+userModel.getNumberOfUserCreatedLastmonth = function( ) {
+    var today = moment().utc().hours(0);
+    var lastweek = moment().utc().subtract(7,'days').hours(0);
+    var lastmonth = moment().utc().subtract(30,'days').hours(0);
+
+    return new Promise( (resolve, reject) => {
+        userModel.find({}, (error, users) => {
+            if(error) reject(error);
+            else {
+                var filteredUsers = users.filter( value => {
+                    return moment(value.createdTime) > lastmonth && moment(value.createdTime) < today
+                })
+                resolve(filteredUsers.length);
+            }
+        });
+    } );
+}
+
+userModel.getNumberOfUserByDate = function( startDate, endDate ) {
+    return new Promise( (resolve, reject) => {
+        userModel.find({}, (error, users) => {
+            if(error) reject(error);
+            else {
+                var filteredUsers = users.filter( value => {
+                    return moment(value.createdTime) > moment(startDate) && moment(value.createdTime) < moment(endDate)
+                })
+                resolve(filteredUsers.length);
             }
         });
     } );

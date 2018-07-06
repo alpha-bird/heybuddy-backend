@@ -154,4 +154,53 @@ meetupModel.search = function( content ) {
     } );
 }
 
+meetupModel.getNumberOfMeetupCreatedLastweek = function( ) {
+    var today = moment().utc().hours(0);
+    var lastweek = moment().utc().subtract(7,'days').hours(0);
+    var lastmonth = moment().utc().subtract(30,'days').hours(0);
+
+    return new Promise( (resolve, reject) => {
+        meetupModel.find({}, (error, meetups) => {
+            if(error) reject(error);
+            else {
+                var filteredMeetup = meetups.filter( value => {
+                    return moment(value.createdTime) > lastweek && moment(value.createdTime) < today
+                })
+                resolve(filteredMeetup.length);
+            }
+        });
+    } );
+}
+
+meetupModel.getNumberOfMeetupCreatedLastmonth = function( ) {
+    var today = moment().utc().hours(0);
+    var lastweek = moment().utc().subtract(7,'days').hours(0);
+    var lastmonth = moment().utc().subtract(30,'days').hours(0);
+
+    return new Promise( (resolve, reject) => {
+        meetupModel.find({}, (error, meetups) => {
+            if(error) reject(error);
+            else {
+                var filteredMeetup = meetups.filter( value => {
+                    return moment(value.createdTime) > lastmonth && moment(value.createdTime) < today
+                })
+                resolve(filteredMeetup.length);
+            }
+        });
+    } );
+}
+
+meetupModel.getNumberOfMeetupByDate = function( startDate, endDate ) {
+    return new Promise( (resolve, reject) => {
+        meetupModel.find({}, (error, meetups) => {
+            if(error) reject(error);
+            else {
+                var filteredMeetup = meetups.filter( value => {
+                    return moment(value.createdTime) > moment(startDate) && moment(value.createdTime) < moment(endDate)
+                })
+                resolve(filteredMeetup.length);
+            }
+        });
+    } );
+}
 module.exports = meetupModel;

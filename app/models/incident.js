@@ -99,4 +99,88 @@ incidentModel.search = function( content ) {
     } );
 }
 
+incidentModel.getNumberOfIncidentCreatedLastweek = function( ) {
+    var today = moment().utc().hours(0);
+    var lastweek = moment().utc().subtract(7,'days').hours(0);
+    var lastmonth = moment().utc().subtract(30,'days').hours(0);
+
+    return new Promise( (resolve, reject) => {
+        incidentModel.find({}, (error, incidents) => {
+            if(error) reject(error);
+            else {
+                var filteredIncident = incidents.filter( value => {
+                    return moment(value.createdTime) > lastweek && moment(value.createdTime) < today
+                })
+                resolve(filteredIncident.length);
+            }
+        });
+    } );
+}
+
+incidentModel.getNumberOfIncidentCreatedLastmonth = function( ) {
+    var today = moment().utc().hours(0);
+    var lastweek = moment().utc().subtract(7,'days').hours(0);
+    var lastmonth = moment().utc().subtract(30,'days').hours(0);
+
+    return new Promise( (resolve, reject) => {
+        incidentModel.find({}, (error, incidents) => {
+            if(error) reject(error);
+            else {
+                var filteredIncident = incidents.filter( value => {
+                    return moment(value.createdTime) > lastmonth && moment(value.createdTime) < today
+                })
+                resolve(filteredIncident.length);
+            }
+        });
+    } );
+}
+
+incidentModel.getNumberOfIncidentByDate = function( startDate, endDate ) {
+    return new Promise( (resolve, reject) => {
+        incidentModel.find({}, (error, incidents) => {
+            if(error) reject(error);
+            else {
+                var filteredIncident = incidents.filter( value => {
+                    return moment(value.createdTime) > moment(startDate) && moment(value.createdTime) < moment(endDate)
+                })
+                resolve(filteredIncident.length);
+            }
+        });
+    } );
+}
+
+incidentModel.getNumberOfIncidentOpen = function( ) {
+    return new Promise( (resolve, reject) => {
+        incidentModel.find({ status : 'open' }, (error, incidents) => {
+            if(error) reject(error);
+            else {
+                resolve(incidents.length);
+            }
+        });
+    } );
+}
+
+incidentModel.getNumberOfIncidentClosed = function( ) {
+    return new Promise( (resolve, reject) => {
+        incidentModel.find({ status : 'closed' }, (error, incidents) => {
+            if(error) reject(error);
+            else {
+                resolve(incidents.length);
+            }
+        });
+    } );
+}
+
+
+incidentModel.getTotal = function( ) {
+    return new Promise( (resolve, reject) => {
+        incidentModel.find({ }, (error, incidents) => {
+            if(error) reject(error);
+            else {
+                resolve(incidents.length);
+            }
+        });
+    } );
+}
+
 module.exports = incidentModel;

@@ -8,7 +8,10 @@ const express = require('express'),
     anonymoustipRouter = require('./anonymoustip'),
     newsfeedRouter = require('./newsfeed'),
     meetupRouter = require('./meetup'),
-    searchRouter = require('./search')
+    searchRouter = require('./search'),
+    todoRouter = require('./todo'),
+    charRouter = require('./chart'),
+    calendareventRouter = require('./calendarevent')
 //export router
 module.exports = router;
 
@@ -25,3 +28,6 @@ anonymoustipRouter(router)
 newsfeedRouter(router)
 meetupRouter(router)
 searchRouter(router)
+todoRouter(router)
+calendareventRouter(router)
+charRouter(router)
