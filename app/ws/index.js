@@ -7,7 +7,7 @@ message_type : AUTHORIZATION,
 access_token : token
 */
 // 0 : away, 1 : available, -1 : not available
-
+// web, mobile : client_type
 module.exports = (ws, req) => {
     var currentUser;
     ws.on('message', function incoming(message) {
@@ -18,6 +18,7 @@ module.exports = (ws, req) => {
             case 'AUTHORIZATION':
                 return authUser(msg_data.token).then( user => {
                     currentUser = user
+                    currentUser.client = msg_data.client_type
                     var data = {
                         success : user ? true : false,
                     }

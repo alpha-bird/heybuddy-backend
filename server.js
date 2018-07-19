@@ -4,6 +4,8 @@ require('dotenv').config();
 //grab our dependencies
 const express = require('express'),
     http = require('http'),
+    https = require('https'),
+    fs = require('fs'),
     WebSocket = require('ws'),
     wsHandler = require('./app/ws'),
     app = express(),
@@ -19,8 +21,11 @@ const express = require('express'),
     favicon = require('serve-favicon'),
     TwitterTokenStrategy = require('passport-twitter-token'),
     _User = require('./app/models/user'),
+    AWS = require('aws-sdk'),
     app_config = require('./app/config');
-    
+
+AWS.config.update({ accessKeyId: app_config.AWS_ACCESS_KEY_ID, secretAccessKey: app_config.AWS_SECRET_ACCESS_KEY, region: 'us-east-1' });
+
 //passport configuration
 passport.use(new TwitterTokenStrategy({
         consumerKey: app_config.TWITTER_CONSUMER_KEY,
@@ -80,11 +85,18 @@ app.use(function(err, req, res, next) {
     console.log(err);
     res.send({ success : false, message : err.message });
 });
+/*
+var options =
+{
+    key:  fs.readFileSync('cert/server.key'),
+    cert: fs.readFileSync('cert/server.crt')
+};
 
-const server = http.createServer(app);
-
+const server = https.createServer(options, app);*/
+const server = http.createServer( app );
 //Websocket
 const wss = new WebSocket.Server({ server });
+
 wss.on('connection', wsHandler);
 
 // start our server

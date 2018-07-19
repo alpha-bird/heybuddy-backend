@@ -1,5 +1,6 @@
 const _Chat = require('../models/chat'),
       _User = require('../models/user'),
+      _Session = require('../models/session'),
       wrapper = require('co-express'),
       utilities = require('../lib/utilities');
 
@@ -29,6 +30,24 @@ const chatModule = {
         newChat.updateField('organizer', user._doc);
         newChat.updateField('buddy', buddy._doc);
         yield newChat.saveToDataBase()
+
+        var buddyPushToken = yield _Session.getPushTokenByUserID( buddy._id );
+        if ( buddyPushToken !== '' ) {
+            var data = {
+                contents: { 'en' : user.profile.firstName + ' created chat with you!' },
+                headings: { 'en' : 'New chat created!'},
+                ios_badgeType : 'Increase',
+                ios_badgeCount : 1,
+                include_player_ids : [buddyPushToken]
+            }
+            var pushRes = yield _PushNotification.sendPush( data );
+            if( pushRes.errors ) {
+                console.log('Sending push notification failed!', pushRes.errors)
+            }
+            else {
+                console.log('Sending push notification successed!')
+            }
+        }
 
         res.send({ success : true });
     }),

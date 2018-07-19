@@ -68,18 +68,18 @@ const buddyModule = {
             if( buddyPushToken !== '' ) {
                 console.log("Sending push notification ... ");
                 var data = {
-                    contents: { 'en' : user.firstname + ' sent you buddy request!' },
+                    contents: { 'en' : user.profile.firstName + ' sent you buddy request!' },
                     headings: { 'en' : 'Buddy Request'},
                     ios_badgeType : 'Increase',
                     ios_badgeCount : 1,
                     include_player_ids : [ buddyPushToken ]
                 }
                 var pushRes = yield _PushNotification.sendPush( data ); //Send Push notification to buddy
-                if ( !pushRes.errors ) {
-                    return res.send({ success : true, message : 'Successfully invited!', error : {} });
+                if ( pushRes.errors ) {
+                    return res.send({ success : true, message : 'Sending push notification failed', error : pushRes.errors });
                 }
                 else {
-                    return res.send({ success : true, message : 'Sending push notification failed', error : pushRes.errors });
+                    return res.send({ success : true, message : 'Successfully invited!', error : {} });
                 }
             }
             else {
@@ -124,18 +124,18 @@ const buddyModule = {
                 var buddyPushToken = yield _Session.getPushTokenByUserID( buddy._id );
                 if ( buddyPushToken !== '' ) {
                     var data = {
-                        contents: { 'en' : user.firstname + ' accepted your buddy invitation!' },
+                        contents: { 'en' : user.profile.firstName + ' accepted your buddy invitation!' },
                         headings: { 'en' : 'Invitation accepted'},
                         ios_badgeType : 'Increase',
                         ios_badgeCount : 1,
                         include_player_ids : [buddyPushToken]
                     }
                     var pushRes = yield _PushNotification.sendPush( data );
-                    if( !pushRes.errors ) {
-                        return res.send({ success : true , message : 'Success' , error : {} });
+                    if( pushRes.errors ) {
+                        return res.send({ success : true , message : 'Sending push notification failed!' , error : pushRes.errors });
                     }
                     else {
-                        return res.send({ success : true , message : 'Sending push notification failed!' , error : pushRes.errors });
+                        return res.send({ success : true , message : 'Success' , error : {} });
                     }
                 }
                 else {
@@ -174,18 +174,18 @@ const buddyModule = {
                 var buddyPushToken = yield _Session.getPushTokenByUserID( buddy._id );
                 if ( buddyPushToken !== '' ) {
                     var data = {
-                        contents: { 'en' : user.firstname + ' decline your buddy invitation!' },
+                        contents: { 'en' : user.profile.firstName + ' decline your buddy invitation!' },
                         headings: { 'en' : 'Invitation declined!'},
                         ios_badgeType : 'Increase',
                         ios_badgeCount : 1,
                         include_player_ids : [buddyPushToken]
                     }
                     var pushRes = yield _PushNotification.sendPush( data );
-                    if( !pushRes.errors ) {
-                        return res.send({ success : true , message : 'Success' , error : {} });
+                    if( pushRes.errors ) {
+                        return res.send({ success : true , message : 'Sending push notification failed!' , error : pushRes.errors });
                     }
                     else {
-                        return res.send({ success : true , message : 'Sending push notification failed!' , error : pushRes.errors });
+                        return res.send({ success : true , message : 'Success' , error : {} });
                     }
                 }
                 else {

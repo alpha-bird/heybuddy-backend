@@ -1,6 +1,31 @@
 const utilities = require('../lib/utilities'),
       wrapper = require('co-express'),
+      _User = require('../models/user'),
       _NewsFeed = require('../models/newsfeed');
+      _Session = require('../models/session'),
+      _PushNotification = require('../lib/pushnotification');
+
+function sendPushnotification( tokenIds, contents, headings ) {
+    return new Promise( (resolve ,reject) => {
+        var data = {
+            contents: { 'en' : contents },
+            headings: { 'en' : headings },
+            ios_badgeType : 'Increase',
+            ios_badgeCount : 1,
+            include_player_ids : tokenIds
+        }
+        _PushNotification.sendPush( data ).then( errors => {
+            if( errors ) {
+                console.log('Sending push notification failed!', pushRes.errors)
+                resolve(false)
+            }
+            else {
+                console.log('Sending push notification successed!')
+                resolve(true)
+            }
+        })
+    })
+}
 
 const newsFeedModule = {
     postNewsFeed : wrapper(function*( req, res ) {
@@ -21,6 +46,14 @@ const newsFeedModule = {
             user.updateField('newsFeeds', updatedNewsFeedList)
             yield user.saveToDataBase()
 
+            var tokenIds = [];
+            for( var i = 0; i < user.buddies.length; i ++ ) {
+                var viewerToken = yield _Session.getPushTokenByUserID( user.buddies[i] );
+                if ( viewerToken !== '' ) {
+                    tokenIds.push(viewerToken)
+                }
+            }
+            yield sendPushnotification(tokenIds, `${user.profile.firstName} just posted new Newsfeed!!`, 'Newsfeed posted!')
             res.send({ success : true, newsFeed : newsFeed._doc })
         }),
     likePost : wrapper(function*( req, res ){
@@ -42,6 +75,9 @@ const newsFeedModule = {
             updatedlikePostings.put(postId)
             user.updateField('likePostings', updatedlikePostings)
             yield user.saveToDataBase()
+
+            var posterToken = yield _Session.getPushTokenByUserID( posting.createdBy );
+            if ( posterToken !== '' ) yield sendPushnotification([ posterToken ], `${user.profile.firstName} like your post!`, 'Like post!')
 
             res.send({ success : true })
         }),
@@ -65,6 +101,9 @@ const newsFeedModule = {
             user.updateField('commentedPostings', updatedcommentedPostings)
             yield user.saveToDataBase()
 
+            var posterToken = yield _Session.getPushTokenByUserID( posting.createdBy );
+            if ( posterToken !== '' ) yield sendPushnotification([ posterToken ], `${user.profile.firstName} made comment on your post!`, 'Comment post!')
+
             res.send({ success : true })
         }),
     getNewsFeedCreatedByMe : wrapper(function*( req, res ) {
@@ -76,6 +115,15 @@ const newsFeedModule = {
     getAllNewsFeed : wrapper(function*(req, res) {
             var newsFeeds = yield _NewsFeed.findAll()
 
+            for( var i = 0 ; i < newsFeeds.length; i ++ ) {
+                newsFeeds[i].createdBy = yield _User.findOneById(newsFeeds[i].createdBy)
+                for( var j = 0; j < newsFeeds[i].likes.likedBy.length ; j ++ ) {
+                    newsFeeds[i].likes.likedBy[j] = yield _User.findOneById(newsFeeds[i].likes.likedBy[j])
+                }
+                for( var j = 0; j < newsFeeds[i].comments.commentedBy.length ; j ++ ) {
+                    newsFeeds[i].comments.commentedBy[j] = yield _User.findOneById(newsFeeds[i].comments.commentedBy[j])
+                }
+            }
             res.send({ success : true, newfeed : newsFeeds })
         }),
     uploadMedia : wrapper(function*(req, res) {

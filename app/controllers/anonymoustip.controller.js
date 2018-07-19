@@ -7,8 +7,6 @@ const _AnonymousTip = require('../models/anonymoustip'),
       S3 = new AWS.S3(),
       moment = require('moment');
 
-AWS.config.update({ accessKeyId: config.AWS_ACCESS_KEY_ID, secretAccessKey: config.AWS_SECRET_ACCESS_KEY, region: 'us-east-1' });
-
 const anonymoustipModule = {
     createAnonymousTip : wrapper(function*(req, res) {
         var data = req.body
@@ -112,7 +110,7 @@ const anonymoustipModule = {
         }
         res.send({ success : true, anonymoustips : filterdTips })
     }),
-
+//This is for uploading multimedia
     uploadMedia : wrapper(function*(req, res) {
         var anonymoustip_media_bucket = 'anonymoustip-media';
         var key = utilies.getBlobNameWillUpload() + `.${req.body.filetype}`;
@@ -133,7 +131,8 @@ const anonymoustipModule = {
         }
 
         var status = yield upload(params)
-        res.send({ success : true, data : status })
+        var url = `https://s3.amazonaws.com/${anonymoustip_media_bucket}/${key}`
+        res.send({ success : true, data : status, url : url })
     })
 }
 

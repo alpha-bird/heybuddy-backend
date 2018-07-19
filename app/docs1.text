@@ -1,0 +1,62 @@
+------------Create new Timer------------
+Url : /timer/new
+Method : POST
+Header : application/json
+         accessToken : String(mandatory)
+
+Body : {
+    details : String(mandatory),
+    duration : Number(mandator, time duration by minutes),
+    viewers : Array of Buddy Id
+}
+
+Example JSON : {
+    details : 'I am going to school, ...',
+    duration : 40(means 40 minutes),
+    viewers : ['48923902942', '589h98h293', .... ]
+}
+
+------------Update Timer------------
+Url : /timer/update
+Method : POST
+Header : application/json
+         accessToken : String(mandatory)
+
+Body : {
+    timerId : String(Id of timer which you need to update)
+    addition : Number(Number of additional duration)
+}
+
+Example JSON : {
+    timerId : '38934hg98h49f8h',
+    addition : 30(30 minutes)
+}
+
+------------Complete Timer------------
+Url : /timer/complete
+Method : POST
+Header : application/json
+         accessToken : String(mandatory)
+
+Body : {
+    pinCode : String(Pincode)
+}
+
+complete timer if pincode is correct 
+give 4 attempts if incorreect
+
+Example JSON : {
+    pincode : '123456'
+}
+
+------------Get All Timers------------
+Url : /timer/all
+Method : GET
+Header : application/json
+         accessToken : String(mandatory)
+
+------------Get Timers created by me------------
+Url : /timer/mine
+Method : GET
+Header : application/json
+         accessToken : String(mandatory)

@@ -1,7 +1,31 @@
 const utilities = require('../lib/utilities'),
       wrapper = require('co-express'),
       moment = require('moment'),
-      _Meetup = require('../models/meetup');
+      _Meetup = require('../models/meetup'),
+      _Session = require('../models/session'),
+      _PushNotification = require('../lib/pushnotification');
+
+function sendPushnotification( tokenIds, contents, headings ) {
+    return new Promise( (resolve ,reject) => {
+        var data = {
+            contents: { 'en' : contents },
+            headings: { 'en' : headings },
+            ios_badgeType : 'Increase',
+            ios_badgeCount : 1,
+            include_player_ids : tokenIds
+        }
+        _PushNotification.sendPush( data ).then( errors => {
+            if( errors ) {
+                console.log('Sending push notification failed!', pushRes.errors)
+                resolve(false)
+            }
+            else {
+                console.log('Sending push notification successed!')
+                resolve(true)
+            }
+        })
+    })
+}
 
 const meetupModule = {
     createMeetUp : wrapper(function*( req, res ) {
@@ -38,6 +62,9 @@ const meetupModule = {
 
         var newMeetUp = new _Meetup(data)
         yield newMeetUp.saveToDataBase()
+        
+        var userPushtoken = yield _Session.getPushTokenByUserID( user._id );
+        if( userPushtoken !== '' ) yield sendPushnotification( [ userPushtoken ], `${user.profile.firstName}, You just created new Meetup!!`, 'Meetup started!')
 
         res.send({ success : true, meetup : newMeetUp._doc })
     }),
@@ -148,6 +175,9 @@ const meetupModule = {
         }
         meetupObj.updateField('pollResult', updatedPollResult)
         yield meetupObj.saveToDataBase()
+
+        var userPushtoken = yield _Session.getPushTokenByUserID( user._id );
+        if( userPushtoken !== '' ) yield sendPushnotification( [ userPushtoken ], `${user.profile.firstName}, You have created poll`, 'Poll created!')
 
         res.send({ success : true, meetup : meetupObj._doc })
     }),

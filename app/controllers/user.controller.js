@@ -6,8 +6,11 @@ const utilities = require('../lib/utilities'),
       _Notification = require('../models/notification'),
       _Session = require('../models/session'),
       _Facebook = require('../lib/facebook'),
+      utilies = require('../lib/utilities'),
       config = require('../config'),
       twilio = require('twilio'),
+      AWS = require('aws-sdk'),
+      S3 = new AWS.S3(),
       moment = require('moment');
 
 const userModule = {
@@ -351,7 +354,8 @@ const userModule = {
             }
 
             var status = yield upload(params)
-            res.send({ success : true, data : status })
+            var url = `https://s3.amazonaws.com/${profile_media_bucket}/${key}`
+            res.send({ success : true, data : status, url : url })
         }),
 
     getUserProfileById : wrapper(function*(req, res) {
