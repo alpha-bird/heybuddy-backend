@@ -1,8 +1,10 @@
 const utilities = require('../lib/utilities'),
       wrapper = require('co-express'),
       moment = require('moment'),
+      _User = require('../models/user'),
       _Meetup = require('../models/meetup'),
       _Session = require('../models/session'),
+      _Notification = require('../models/notification'),
       _PushNotification = require('../lib/pushnotification');
 
 function sendPushnotification( tokenIds, contents, headings ) {
@@ -64,6 +66,16 @@ const meetupModule = {
         yield newMeetUp.saveToDataBase()
         
         var userPushtoken = yield _Session.getPushTokenByUserID( user._id );
+        
+        var notification = yield _Notification.findOneById( user.notificationId )
+        notification.putNotification({
+            title : 'Meetup started!',
+            description : `${user.profile.firstName}, You just created new Meetup!!`,
+            datetime : moment(Date.now()).utc().format(),
+            image : ''
+        })
+        yield notification.saveToDataBase()
+
         if( userPushtoken !== '' ) yield sendPushnotification( [ userPushtoken ], `${user.profile.firstName}, You just created new Meetup!!`, 'Meetup started!')
 
         res.send({ success : true, meetup : newMeetUp._doc })
@@ -71,11 +83,18 @@ const meetupModule = {
 
     getPublicMeetups : wrapper(function*(req, res) {
         var publicMeetups = yield _Meetup.findAllPublic()
+        for( var i = 0; i < publicMeetups.length ; i ++ ) {
+            publicMeetups[i].createdBy = yield _User.findOneById(publicMeetups[i].createdBy)
+        }
         res.send({ success : true, meetups : publicMeetups })
     }),
     
     getAllMeetups : wrapper(function*(req, res) {
         var allMeetups = yield _Meetup.findAll()
+
+        for( var i = 0; i < allMeetups.length ; i ++ ) {
+            allMeetups[i].createdBy = yield _User.findOneById(allMeetups[i].createdBy)
+        }
         res.send({ success : true, meetups : allMeetups })
     }),
 
@@ -176,10 +195,38 @@ const meetupModule = {
         meetupObj.updateField('pollResult', updatedPollResult)
         yield meetupObj.saveToDataBase()
 
-        var userPushtoken = yield _Session.getPushTokenByUserID( user._id );
+        var userPushtoken = yield _Session.getPushTokenByUserID( user._id )
+        
+        var notification = yield _Notification.findOneById( user.notificationId )
+        notification.putNotification({
+            title : 'Poll created!',
+            description : `${user.profile.firstName}, You have created poll`,
+            datetime : moment(Date.now()).utc().format(),
+            image : ''
+        })
+        yield notification.saveToDataBase()
+
         if( userPushtoken !== '' ) yield sendPushnotification( [ userPushtoken ], `${user.profile.firstName}, You have created poll`, 'Poll created!')
 
         res.send({ success : true, meetup : meetupObj._doc })
+    }),
+    
+    addFeedback : wrapper(function*(req, res) {
+        var meetupId = req.body.meetupId
+        var meetupObj = yield _Meetup.findOneById(meetupId)
+
+        var newFeedback = {
+            rating : req.body.rating,
+            feedback : req.body.feedback,
+            feedbackFrom : req.session.user._id
+        }
+        meetupObj.addFeedback( newFeedback )
+        yield meetupObj.saveToDataBase()
+
+        res.send({
+            success : true,
+            meetup : meetupObj
+        })
     }),
 
     uploadMedia : wrapper(function*(req, res) {

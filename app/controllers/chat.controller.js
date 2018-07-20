@@ -1,7 +1,9 @@
 const _Chat = require('../models/chat'),
       _User = require('../models/user'),
       _Session = require('../models/session'),
+      _Notification = require('../models/notification'),
       wrapper = require('co-express'),
+      moment = require('moment'),
       utilities = require('../lib/utilities');
 
 const chatModule = {
@@ -32,9 +34,19 @@ const chatModule = {
         yield newChat.saveToDataBase()
 
         var buddyPushToken = yield _Session.getPushTokenByUserID( buddy._id );
+        
+        var buddyNotification = yield _Notification.findOneById(buddy.notificationId);
+        buddyNotification.putNotification({
+            title : 'New chat created!',
+            description : `${user.profile.firstName} + created chat with you!`,
+            datetime : moment(Date.now()).utc().format(),
+            image : ''
+        })
+        yield buddyNotification.saveToDataBase();
+
         if ( buddyPushToken !== '' ) {
             var data = {
-                contents: { 'en' : user.profile.firstName + ' created chat with you!' },
+                contents: { 'en' : `${user.profile.firstName} + created chat with you!` },
                 headings: { 'en' : 'New chat created!'},
                 ios_badgeType : 'Increase',
                 ios_badgeCount : 1,

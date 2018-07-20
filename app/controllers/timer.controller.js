@@ -3,7 +3,9 @@ const utilities = require('../lib/utilities'),
       moment = require('moment'),
       cronjob = require('cron').CronJob,
       _Timer = require('../models/timer'),
+      _User = require('../models/user'),
       _Session = require('../models/session'),
+      _Notification = require('../models/notification'),
       _PushNotification = require('../lib/pushnotification');
 
 // by minutes
@@ -50,6 +52,15 @@ const timerModule = {
 
         var job = new cronjob(cronTime, wrapper(function*() {
                 console.log('Cron job working ....')
+                
+                var notification = _Notification.findOneById(user.notificationId)
+                notification.putNotification({
+                    title : 'Complete your Timer!!',
+                    description : `${user.profile.firstName}, Complete your timer by confirmming your pin code!!`,
+                    datetime : moment(Date.now()).utc().format(),
+                    image : ''
+                })
+                yield notification.saveToDataBase()
 
                 if( userPushtoken !== '' ) {
                     console.log("Sending push notification for timer completion ... ");
@@ -83,10 +94,29 @@ const timerModule = {
         var newTimer = new _Timer(timerBody)
         yield newTimer.saveToDataBase()
 
+        var notification = _Notification.findOneById(user.notificationId)
+        notification.putNotification({
+            title : 'Timer started!',
+            description : `${user.profile.firstName}, You just started your timer!!`,
+            datetime : moment(Date.now()).utc().format(),
+            image : ''
+        })
+        yield notification.saveToDataBase()
+
         if( userPushtoken !== '' ) yield sendPushnotification( [ userPushtoken ], `${user.profile.firstName}, You just started your timer!!`, 'Timer started!')
 
         var tokenIds = [];
         for( var i = 0; i < timerBody.viewers.length; i ++ ) {
+            var viewer = _User.findOneById(timerBody.viewers[i])
+            var notification = _Notification.findOneById(viewer.notificationId)
+            notification.putNotification({
+                title : 'New Timer started!',
+                description :`${user.profile.firstName} just started new timer!!`,
+                datetime : moment(Date.now()).utc().format(),
+                image : ''
+            })
+            yield notification.saveToDataBase()
+            
             var viewerToken = yield _Session.getPushTokenByUserID( timerBody.viewers[i] );
             if ( viewerToken !== '' ) {
                 tokenIds.push(viewerToken)
@@ -106,6 +136,16 @@ const timerModule = {
 
             var tokenIds = []
             for( var i = 0; i < timer.viewers.length ; i ++) {
+                var viewer = _User.findOneById(timer.viewers[i])
+                var notification = _Notification.findOneById(viewer.notificationId)
+                notification.putNotification({
+                    title : 'Timer ended!',
+                    description :`${user.profile.firstName} ended a timer!! Thanks for being a buddy they are safe!`,
+                    datetime : moment(Date.now()).utc().format(),
+                    image : ''
+                })
+                yield notification.saveToDataBase()
+                
                 var viewerToken = yield _Session.getPushTokenByUserID( timer.viewers[i] );
                 if ( viewerToken !== '' ) {
                     tokenIds.push(viewerToken)       
@@ -157,6 +197,14 @@ const timerModule = {
         var cronTime = new Date(newEsitmationCompletionTime.format('YYYY'), newEsitmationCompletionTime.format('M'), newEsitmationCompletionTime.format('D'), newEsitmationCompletionTime.format('H'), newEsitmationCompletionTime.format('m'), newEsitmationCompletionTime.format('s'), 0)
         var userPushtoken = yield _Session.getPushTokenByUserID( user._id );
         var job = new cronjob(cronTime, wrapper(function*() {
+                var notification = _Notification.findOneById(user.notificationId)
+                notification.putNotification({
+                    title : 'Complete your Timer!!',
+                    description : `${user.profile.firstName}, Complete your timer by confirmming your pin code!!`,
+                    datetime : moment(Date.now()).utc().format(),
+                    image : ''
+                })
+                yield notification.saveToDataBase()
                 console.log('Cron job working ....')
 
                 if( userPushtoken !== '' ) {
@@ -181,11 +229,30 @@ const timerModule = {
         timer.updateField('cronJob', job)
 
         yield timer.saveToDataBase()
+        
+        var notification = _Notification.findOneById(user.notificationId)
+        notification.putNotification({
+            title : 'Your Timer updated!',
+            description :`${user.profile.firstName}, You just updated your timer!!`,
+            datetime : moment(Date.now()).utc().format(),
+            image : ''
+        })
+        yield notification.saveToDataBase()
 
         if( userPushtoken !== '' ) yield sendPushnotification( [ userPushtoken ], `${user.profile.firstName}, You just updated your timer!!`, 'Your Timer updated!')
 
         var tokenIds = [];
         for( var i = 0; i < timerBody.viewers.length; i ++ ) {
+            var viewer = _User.findOneById(timerBody.viewers[i])
+            var notification = _Notification.findOneById(viewer.notificationId)
+            notification.putNotification({
+                title : 'Timer updated!',
+                description :`${user.profile.firstName} just updated timer!!`,
+                datetime : moment(Date.now()).utc().format(),
+                image : ''
+            })
+            yield notification.saveToDataBase()
+
             var viewerToken = yield _Session.getPushTokenByUserID( timerBody.viewers[i] );
             if ( viewerToken !== '' ) {
                 tokenIds.push(viewerToken)

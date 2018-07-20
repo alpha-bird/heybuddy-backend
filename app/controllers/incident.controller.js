@@ -1,10 +1,12 @@
 const utilities = require('../lib/utilities'),
       wrapper = require('co-express'),
-      _Incident = require('../models/incident'),
       AWS = require('aws-sdk'),
       S3 = new AWS.S3(),
       moment = require('moment'),
       _Session = require('../models/session'),
+      _User = require('../models/user'),
+      _Incident = require('../models/incident'),
+      _Notification = require('../models/notification'),
       _PushNotification = require('../lib/pushnotification');
 
 function sendPushnotification( tokenIds, contents, headings ) {
@@ -51,7 +53,18 @@ const incidentModule = {
 
         var tokenIds = [];
         for( var i = 0; i < user.buddies.length; i ++ ) {
-            var buddyToken = yield _Session.getPushTokenByUserID( user.buddies[i] );
+            var buddyToken = yield _Session.getPushTokenByUserID( user.buddies[i] )
+
+            var buddy = yield _User.findOneById(user.buddies[i])
+            var notification = yield _Notification.findOneById(buddy.notificationId)
+            notification.putNotification({
+                title : 'Incident happened!',
+                description : `${user.profile.firstName} just created new Incident!!`,
+                datetime : moment(Date.now()).utc().format(),
+                image : ''
+            })
+            yield notification.saveToDataBase()
+            
             if ( buddyToken !== '' ) {
                 tokenIds.push(buddyToken)
             }

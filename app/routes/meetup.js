@@ -8,5 +8,6 @@ module.exports = ( router ) => {
       router.post('/meetup/goto', _AuthCheck, meetupController.gotoMeetup);
       router.post('/meetup/poll/create', _AuthCheck, meetupController.createPoll);
       router.post('/meetup/addbuddy', _AuthCheck, meetupController.addBuddy);
+      router.post('/meetup/addfeedback', _AuthCheck, meetupController.addFeedback);
       router.post('/meetup/media/upload', _AuthCheck, meetupController.uploadMedia);
 }

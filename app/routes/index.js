@@ -11,7 +11,9 @@ const express = require('express'),
     searchRouter = require('./search'),
     todoRouter = require('./todo'),
     charRouter = require('./chart'),
-    calendareventRouter = require('./calendarevent')
+    calendareventRouter = require('./calendarevent'),
+    feedbackRouter = require('./feedback'),
+    notificationRouter = require('./notification')
 //export router
 module.exports = router;
 
@@ -19,11 +21,11 @@ router.get('/', (req, res) => {
     res.render('pages/home');
 })
 
-userRouter(router);
-buddyRouter(router);
-companyRouter(router);
-chatRouter(router);
-incidentRouter(router);
+userRouter(router)
+buddyRouter(router)
+companyRouter(router)
+chatRouter(router)
+incidentRouter(router)
 anonymoustipRouter(router)
 newsfeedRouter(router)
 meetupRouter(router)
@@ -31,3 +33,5 @@ searchRouter(router)
 todoRouter(router)
 calendareventRouter(router)
 charRouter(router)
+feedbackRouter(router)
+notificationRouter(router)

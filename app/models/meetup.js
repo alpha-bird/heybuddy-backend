@@ -91,11 +91,19 @@ const meetupSchema = new Schema({
     ispublic : {
         type : Boolean,
         default : false
+    },
+    feedBacks : {
+        type : Array,
+        default : []
     }
 });
 
 meetupSchema.methods.updateField = function( key, value ) {
     this[key] = value;
+}
+
+meetupSchema.methods.addFeedback = function( feedback ) {
+    this.feedBacks.push(feedback)
 }
 
 meetupSchema.methods.saveToDataBase = function( ) {

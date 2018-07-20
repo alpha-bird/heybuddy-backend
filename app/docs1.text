@@ -60,3 +60,51 @@ Url : /timer/mine
 Method : GET
 Header : application/json
          accessToken : String(mandatory)
+---------------------2018.7.20-------------------
+1. I have added rating system for Meetup, Whole system
+API endpoints
+
+Leave feedback
+Uri : /heybuddy/feedback
+Method : POST
+Header : application/json
+         accessToken : String(mandatory)
+Body : 
+    rating : Number(1 ~ 5, mandatory),
+    feedback : String(mandatory),
+
+Get all feedbacks
+Uri : /heybuddy/feedback
+Method : GET
+Header : application/json
+         accessToken : String(mandatory)
+
+Add feedback to Meetup
+Uri : /meetup/addfeedback
+Method : POST
+Header : application/json
+         accessToken : String(mandatory)
+Body : {
+    meetupId : Id of Meetup( mandatory )
+    rating : Number(1 ~ 5, mandatory),
+    feedback : String( mandatory ),
+
+}
+
+2. Notification list implemented
+
+All notification should be recorded on DB automatically and user can read it anytime
+
+Get all notification(newnotification, oldnotification)
+Uri : /notification
+Method : GET
+Header : application/json
+         accessToken : String(mandatory)
+
+3. Manuel can get post data at 1 API call, I have fixed api endpoint for newsfeed and he can get all information at 1 API call
+4. API endpoint for uploading multi media are ready now(Except message). It will upload data to S3 Bucket.
+
+Rest of work on Backend & Dashboard
+
+1. API endpoints for Setting, Uploading multi media on meesage,
+2. Chat will support all format
