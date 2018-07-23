@@ -30,4 +30,5 @@ module.exports = ( router ) => {
     router.post( '/user/profile', _AuthCheck, userController.getProfile );
     router.post( '/user/media/upload', userController.uploadMedia );
     router.post( '/user/specific', _AuthCheck, userController.getUserProfileById);
+    router.post( '/user/specific/update', _AuthCheck, userController.updateSpecificUser);
 }

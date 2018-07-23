@@ -362,6 +362,12 @@ const userModule = {
             var userId = req.body.userId
             var selectedUser = yield _User.findOneById(userId)
             res.send({ success : true, user : selectedUser._doc , error : {}, message : '' });
+        }),
+    updateSpecificUser : wrapper(function*(req, res) {
+            var userId = req.body.userId
+            var newUserinfo = req.body.newuserinfo
+            var res = yield _User.updateUser( userId, newUserinfo )
+            res.send({ success : true, res : res })
         })
 }
 

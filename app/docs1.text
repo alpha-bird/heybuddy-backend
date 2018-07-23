@@ -108,3 +108,112 @@ Rest of work on Backend & Dashboard
 
 1. API endpoints for Setting, Uploading multi media on meesage,
 2. Chat will support all format
+
+- Upload Media for message
+
+Uri : /message/upload
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : 
+    filetype : Extend of file
+    conent : Content of file
+
+- Update settings
+
+Uri : /settings/update
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : 
+    settings : {
+        language : two character string(English : 'EN', ... )
+        isNotificationEnabled : Boolean
+        isPosPrivate : Boolean
+        invisibleMode : Boolean
+        preWrittenMessage : String
+    }
+Everything is mandatory
+
+###################################################################
+
+- Save response template
+
+Uri : /response
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : 
+    newresponse : {
+        responseBody : String for response
+    }
+
+- Get All response template
+
+Uri : /response
+Method : GET
+Header : 
+    application/json
+    access-token : String : mandatory
+
+- Save response to incident
+
+Uri : /incident/response/save
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+
+Body : {
+    incidentId : Id of incident
+    response : String for response
+}
+
+- Get response from incident
+
+Uri : /incident/response/
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : {
+    incidentId : Id of incident
+}
+
+- Save comment to incident
+
+Uri : /incident/comment/save
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : {
+    incidentId : Id of incident
+    comment : String for comment
+}
+
+- Get comment from incident
+
+Uri : /incident/comment
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : {
+    incidentId : Id of incident
+}
+
+- Update user table
+
+Uri : /user/specific/update
+Method : POST
+Header : 
+    application/json
+    access-token : String : mandatory
+Body : {
+    userId : Id of user
+    newuserinfo : New user table 
+}

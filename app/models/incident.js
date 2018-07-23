@@ -50,6 +50,14 @@ const incidentSchema = new Schema({
             type : String,
             required : true
         }
+    },
+    responses : {
+        type : Array,
+        default : []
+    },
+    comments : {
+        type : Array,
+        default : []
     }
 });
 
@@ -83,6 +91,15 @@ incidentModel.getAllIncidents = function( ) {
             else resolve(incidents);
         });
     } );
+}
+
+incidentModel.findOneById = function( incidentId ) {
+    return new Promise( ( resolve, reject ) => { 
+        incidentModel.findOne({ _id : incidentId }, (err, res) => {
+            if(err) reject(err);
+            else resolve(res);
+        });
+    });
 }
 
 incidentModel.search = function( content ) {

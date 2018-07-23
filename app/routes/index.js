@@ -13,7 +13,9 @@ const express = require('express'),
     charRouter = require('./chart'),
     calendareventRouter = require('./calendarevent'),
     feedbackRouter = require('./feedback'),
-    notificationRouter = require('./notification')
+    messageRouter = require('./message'),
+    notificationRouter = require('./notification'),
+    responseTemplateRouter = require('./restemplate');
 //export router
 module.exports = router;
 
@@ -35,3 +37,5 @@ calendareventRouter(router)
 charRouter(router)
 feedbackRouter(router)
 notificationRouter(router)
+messageRouter(router)
+responseTemplateRouter(router)

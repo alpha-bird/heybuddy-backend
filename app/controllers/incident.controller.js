@@ -115,6 +115,50 @@ const incidentModule = {
         var status = yield upload(params)
         var url = `https://s3.amazonaws.com/${incident_media_bucket}/${key}`
         res.send({ success : true, data : status, url : url })
+    }),
+    
+    saveResponse : wrapper(function*(req, res) {
+        var incidentId = req.body.incidentId
+        var newResponse = req.body.response
+        var incident = yield _Incident.findOneById(incidentId)
+        var newResponses = Object.assign([], incident.responses)
+        newResponses.push(newResponse)
+        incident.updateField('responses', newResponses)
+        res.send({
+            success : true,
+            comments : newResponses
+        })
+    }),
+    
+    getResponses : wrapper(function*(req, res) {
+        var incidentId = req.body.incidentId
+        var incident = yield _Incident.findOneById(incidentId)
+        res.send({
+            success : true,
+            responses : incident.responses
+        })
+    }),
+
+    saveComment : wrapper(function*(req, res) {
+        var incidentId = req.body.incidentId
+        var newComment = req.body.comment
+        var incident = yield _Incident.findOneById(incidentId)
+        var newComments = Object.assign([], incident.comments)
+        newComments.push(newComment)
+        incident.updateField('comments', newComments)
+        res.send({
+            success : true,
+            comments : newComments
+        })
+    }),
+
+    getComments : wrapper(function*(req, res) {
+        var incidentId = req.body.incidentId
+        var incident = yield _Incident.findOneById(incidentId)
+        res.send({
+            success : true,
+            comments : incident.comments
+        })
     })
 }
 

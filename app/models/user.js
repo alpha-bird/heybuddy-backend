@@ -86,6 +86,10 @@ const userSchema = new Schema({
             default : ''
         }
     },
+    preSelectedContract : {
+        type : Array,
+        default : []
+    },
     companies : {
         type : Array,
         default : []
@@ -373,5 +377,13 @@ userModel.getNumberOfUserByDate = function( startDate, endDate ) {
     } );
 }
 
+userModel.updateUser = function( userId, newinfo ) {
+    return new Promise( (resolve, reject) => {
+        userModel.update({ _id : userId }, newinfo, { w:1, multi: true }, (err, res) => {
+            if(err) reject(err)
+            else resolve(res)
+        })
+    })
+}
 // export the model
 module.exports = userModel;
