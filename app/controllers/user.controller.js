@@ -194,7 +194,7 @@ const userModule = {
             }
         }),
     loginWithTwitter : wrapper(function*(req, res) {
-            const { email, userId, userName } = req.body;
+            const { email, userId, userName, pushId } = req.body;
             var user = yield _User.findOneByEmail(email);
             if( user ) {
                 var oldSession = yield _Session.findSessionByUserID( user._id );
