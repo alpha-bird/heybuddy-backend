@@ -91,7 +91,7 @@ const userModule = {
         }),
     loginWithFacebook : wrapper( function*(req, res) {
             const { facebookId, facebookToken, email, profile, pushId } = req.body;
-            var user = yield _User.findUserByFacebookId(facebookId);
+            var user = yield _User.findOneByEmail(email);
             if( user ) {
                 var oldSession = yield _Session.findSessionByUserID( user._id );
                 if( oldSession ) {
@@ -143,7 +143,7 @@ const userModule = {
         }),
     loginWithGoogle : wrapper( function*(req, res) {
             const { googleId, googleToken, serverAuthCode, pushId, email ,profile } = req.body;
-            var user = yield _User.findUserByGoogleId(googleId);
+            var user = yield _User.findOneByEmail(email);
             if( user ) {
                 var oldSession = yield _Session.findSessionByUserID( user._id );
                 if( oldSession ) {
@@ -193,7 +193,60 @@ const userModule = {
                         });
             }
         }),
+    loginWithTwitter : wrapper(function*(req, res) {
+            const { email, userId, userName } = req.body;
+            var user = yield _User.findOneByEmail(email);
+            if( user ) {
+                var oldSession = yield _Session.findSessionByUserID( user._id );
+                if( oldSession ) {
+                    yield oldSession.removeFromDataBase();
+                }
+                // New session create
+                var newSession = new _Session({
+                    userId : user._id,
+                    pushId : pushId
+                });
+                yield newSession.saveToDataBase();
 
+                var accessToken = utilities.generateJWT(user.email);
+                return res.send({ success : true, accessToken : accessToken, sessionId : newSession._id, user : user._doc, message : 'Login Success!' });
+            }
+            else {
+                var newNotification = new _Notification( ); //New Empty Notification Document
+                yield newNotification.saveToDataBase();
+
+                var newUser = new _User(
+                    {
+                        email : email,
+                        social : {
+                            twitterId : userId
+                        },
+                        profile : {
+                            firstName : userName
+                        },
+                        createdTime : moment().utc().format(),
+                    }
+                )
+                newUser.updateField( 'notificationId', newNotification._id );
+                yield newUser.saveToDataBase();
+                
+                var newSession = new _Session({
+                    userId : newUser._id,
+                    pushId : pushId
+                });
+                yield newSession.saveToDataBase();
+
+                var accessToken = utilities.generateJWT(newUser.email);
+                return res.send({ 
+                            success: true , 
+                            accessToken : accessToken, 
+                            sessionId : newSession._id, 
+                            user : newUser._doc, 
+                            message : 'User Login with Google+ success!', 
+                            error : {} 
+                        });
+            }
+        }),
     reverseTwitter : wrapper(function*(req, res) {
             request.post({
                 url: 'https://api.twitter.com/oauth/request_token',

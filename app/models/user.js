@@ -280,7 +280,9 @@ userModel.upsertTwitterUser = function(token, tokenSecret, profile, cb) {
       'email': profile.emails[0].value
     }, wrapper(function*(err, user) {
       // no user was found, lets create a new one
-        if (!user) {
+        if (user) {
+            return cb(err, user);
+        } else {
             var newNotification = new _Notification( ) //New Empty Notification Document
             yield newNotification.saveToDataBase()
             
@@ -306,9 +308,32 @@ userModel.upsertTwitterUser = function(token, tokenSecret, profile, cb) {
                     console.log(error);
                 }
                 return cb(error, savedUser);
+            });var newNotification = new _Notification( ) //New Empty Notification Document
+            yield newNotification.saveToDataBase()
+            
+            console.log(profile);
+
+            var newUser = new that({
+                email: profile.emails[0].value,
+                social : {
+                    twitterId : profile.id
+                },
+                profile : {
+                    firstName : profile.name.familyName + profile.name.middleName,
+                    lastName : profile.name.givenName,
+                    avatarUrl : profile._json.profile_image_url_https
+                    //position : profile._json.geo_enabled ? profile._json.status.geo,
+                },
+                createdTime : moment().utc().format(),
+                notificationId : newNotification._id
             });
-        } else {
-            return cb(err, user);
+
+            newUser.save(function(error, savedUser) {
+                if (error) {
+                    console.log(error);
+                }
+                return cb(error, savedUser);
+            });
         }
     }));
 };
