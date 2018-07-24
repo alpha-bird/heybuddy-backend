@@ -10,14 +10,14 @@ const chatModule = {
     createChat : wrapper(function*(req, res) {
         var newChat = new _Chat({
             channel : 'channel-' + utilities.getBlobNameWillUpload(), 
-            organizer : req.session.user._doc,
-            buddy : req.body.buddy
+            organizer : req.session.user._id,
+            buddy : req.body.buddyId
         });
 
         yield newChat.saveToDataBase();
 
         var user = req.session.user;
-        var buddy = yield _User.findOneById(req.body.buddy._id);
+        var buddy = yield _User.findOneById(req.body.buddyId);
 
         var newUserChats = user.chats;
         newUserChats.push(newChat._id);
@@ -28,11 +28,7 @@ const chatModule = {
         newBuddyChats.push(newChat._id);
         buddy.updateField('chats', newBuddyChats);
         yield buddy.saveToDataBase();
-
-        newChat.updateField('organizer', user._doc);
-        newChat.updateField('buddy', buddy._doc);
-        yield newChat.saveToDataBase()
-
+        
         var buddyPushToken = yield _Session.getPushTokenByUserID( buddy._id );
         
         var buddyNotification = yield _Notification.findOneById(buddy.notificationId);
