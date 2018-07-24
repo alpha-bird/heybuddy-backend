@@ -142,7 +142,7 @@ const userModule = {
             }
         }),
     loginWithGoogle : wrapper( function*(req, res) {
-            const { googleId, googleToken, serverAuthCode, pushId, email ,profile } = req.body;
+            const { googleId, email, pushId, profile } = req.body;
             var user = yield _User.findOneByEmail(email);
             if( user ) {
                 var oldSession = yield _Session.findSessionByUserID( user._id );
