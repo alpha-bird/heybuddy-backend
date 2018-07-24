@@ -41,7 +41,7 @@ const newsFeedModule = {
             var newsFeed = new _NewsFeed(newsFeedBody)
             yield newsFeed.saveToDataBase()
 
-            var updatedNewsFeedList = Object.assign([], user._doc.newsFeeds)
+            var updatedNewsFeedList = Object.assign([], user.newsFeeds)
             updatedNewsFeedList.put(newsFeed._id)
 
             user.updateField('newsFeeds', updatedNewsFeedList)
@@ -66,13 +66,13 @@ const newsFeedModule = {
                 }
             }
             yield sendPushnotification(tokenIds, `${user.profile.firstName} just posted new Newsfeed!!`, 'Newsfeed posted!')
-            res.send({ success : true, newsFeed : newsFeed._doc })
+            res.send({ success : true, newsFeed : newsFeed })
         }),
     likePost : wrapper(function*( req, res ){
             var user = req.session.user
             var postId = req.body.newsFeedId
             var posting = yield _NewsFeed.findOneById( postId )
-            var likeInfo = Object.assign({}, posting._doc.likes)
+            var likeInfo = Object.assign({}, posting.likes)
             likeInfo.likedBy.put(user._id)
 
             var updatedlikeInfo = {
@@ -83,7 +83,7 @@ const newsFeedModule = {
             posting.updateField('likes', updatedlikeInfo)
             yield posting.saveToDataBase()
 
-            var updatedlikePostings = Object.assign([], user._doc.likePostings)
+            var updatedlikePostings = Object.assign([], user.likePostings)
             updatedlikePostings.put(postId)
             user.updateField('likePostings', updatedlikePostings)
             yield user.saveToDataBase()
@@ -107,7 +107,7 @@ const newsFeedModule = {
             var user = req.session.user
             var postId = req.body.newsFeedId
             var posting = yield _NewsFeed.findOneById( postId )
-            var commentInfo = Object.assign({}, posting._doc.comments)
+            var commentInfo = Object.assign({}, posting.comments)
             commentInfo.commentedBy.put(user._id)
 
             var updatedcommentInfo = {
@@ -118,7 +118,7 @@ const newsFeedModule = {
             posting.updateField('comments', updatedcommentInfo)
             yield posting.saveToDataBase()
 
-            var updatedcommentedPostings = Object.assign([], user._doc.commentedPostings)
+            var updatedcommentedPostings = Object.assign([], user.commentedPostings)
             updatedcommentedPostings.put(postId)
             user.updateField('commentedPostings', updatedcommentedPostings)
             yield user.saveToDataBase()

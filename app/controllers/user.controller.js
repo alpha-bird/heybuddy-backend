@@ -46,7 +46,7 @@ const userModule = {
                         success: true , 
                         accessToken : accessToken, 
                         sessionId : newSession._id, 
-                        user : newUser._doc, 
+                        user : newUser, 
                         message : 'User registration success!', 
                         error : {} 
                     });
@@ -79,7 +79,7 @@ const userModule = {
                     yield newSession.saveToDataBase();
 
                     var accessToken = utilities.generateJWT(user.email);
-                    return res.send({ success : true, accessToken : accessToken, sessionId : newSession._id, user : user._doc, message : 'Login Success!' });
+                    return res.send({ success : true, accessToken : accessToken, sessionId : newSession._id, user : user, message : 'Login Success!' });
                 }
                 else {
                     return res.send({ success : false, accessToken : '', sessionId : '', user : {}, message : 'Password is incorrect!' });
@@ -105,7 +105,7 @@ const userModule = {
                 yield newSession.saveToDataBase();
 
                 var accessToken = utilities.generateJWT(user.email);
-                return res.send({ success : true, accessToken : accessToken, sessionId : newSession._id, user : user._doc, message : 'Login Success!' });
+                return res.send({ success : true, accessToken : accessToken, sessionId : newSession._id, user : user, message : 'Login Success!' });
             }
             else {
                 var newNotification = new _Notification( ); //New Empty Notification Document
@@ -135,7 +135,7 @@ const userModule = {
                             success: true , 
                             accessToken : accessToken, 
                             sessionId : newSession._id, 
-                            user : newUser._doc, 
+                            user : newUser, 
                             message : 'User Login with Facebook success!', 
                             error : {} 
                         });
@@ -157,7 +157,7 @@ const userModule = {
                 yield newSession.saveToDataBase();
 
                 var accessToken = utilities.generateJWT(user.email);
-                return res.send({ success : true, accessToken : accessToken, sessionId : newSession._id, user : user._doc, message : 'Login Success!' });
+                return res.send({ success : true, accessToken : accessToken, sessionId : newSession._id, user : user, message : 'Login Success!' });
             }
             else {
                 var newNotification = new _Notification( ); //New Empty Notification Document
@@ -187,7 +187,7 @@ const userModule = {
                             success: true , 
                             accessToken : accessToken, 
                             sessionId : newSession._id, 
-                            user : newUser._doc, 
+                            user : newUser, 
                             message : 'User Login with Google+ success!', 
                             error : {} 
                         });
@@ -209,7 +209,7 @@ const userModule = {
                 yield newSession.saveToDataBase();
 
                 var accessToken = utilities.generateJWT(user.email);
-                return res.send({ success : true, accessToken : accessToken, sessionId : newSession._id, user : user._doc, message : 'Login Success!' });
+                return res.send({ success : true, accessToken : accessToken, sessionId : newSession._id, user : user, message : 'Login Success!' });
             }
             else {
                 var newNotification = new _Notification( ); //New Empty Notification Document
@@ -241,7 +241,7 @@ const userModule = {
                             success: true , 
                             accessToken : accessToken, 
                             sessionId : newSession._id, 
-                            user : newUser._doc, 
+                            user : newUser, 
                             message : 'User Login with Google+ success!', 
                             error : {} 
                         });
@@ -330,7 +330,7 @@ const userModule = {
         }),
 
     getProfile : wrapper( function*(req, res) {
-            res.send({ success : true, user : req.session.user._doc, error : {}, message : '' });
+            res.send({ success : true, user : req.session.user, error : {}, message : '' });
         }),
 
     setCompanies : wrapper( function*(req, res) {
@@ -342,7 +342,7 @@ const userModule = {
 
             for( var i = 0; i < companies.length; i ++ ) {
                 var company = yield _Company.findOneById(companies[i])
-                var itsEmployees = Object.assign([], company._doc.employees)
+                var itsEmployees = Object.assign([], company.employees)
                 
                 if( !itsEmployees.includes(user._id) ) {
                     itsEmployees.push(user._id)
@@ -350,7 +350,7 @@ const userModule = {
                 company.updateField('employees', itsEmployees)
                 yield company.saveToDataBase()
             }
-            res.send({ success : true, user : user._doc, error : {}, message : 'Successfully updated!' });
+            res.send({ success : true, user : user, error : {}, message : 'Successfully updated!' });
         }),
     sendCode : wrapper(function*(req, res) {
             const { phoneNumber, text } = req.body;
@@ -414,7 +414,7 @@ const userModule = {
     getUserProfileById : wrapper(function*(req, res) {
             var userId = req.body.userId
             var selectedUser = yield _User.findOneById(userId)
-            res.send({ success : true, user : selectedUser._doc , error : {}, message : '' });
+            res.send({ success : true, user : selectedUser , error : {}, message : '' });
         }),
     updateSpecificUser : wrapper(function*(req, res) {
             var userId = req.body.userId

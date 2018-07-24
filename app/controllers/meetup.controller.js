@@ -78,7 +78,7 @@ const meetupModule = {
 
         if( userPushtoken !== '' ) yield sendPushnotification( [ userPushtoken ], `${user.profile.firstName}, You just created new Meetup!!`, 'Meetup started!')
 
-        res.send({ success : true, meetup : newMeetUp._doc })
+        res.send({ success : true, meetup : newMeetUp })
     }),
 
     getPublicMeetups : wrapper(function*(req, res) {
@@ -107,7 +107,7 @@ const meetupModule = {
         var updatedMembers = Object.assign([], meetupObj.members)
         updatedMembers.push(user._id)
 
-        var updatedGoing = Object.assign([], meetupObj._doc.going)
+        var updatedGoing = Object.assign([], meetupObj.going)
         updatedGoing.push(user._id)
 
         var updatednotVotedMembers = Object.assign([], meetupObj.pollResult.notVotedMembers)
@@ -117,19 +117,19 @@ const meetupModule = {
                 agreedMembers : meetupObj.pollResult.agreedMembers,
                 disagreedMembers : meetupObj.pollResult.disagreedMembers,
                 notVotedMembers : updatednotVotedMembers,
-                percentageOfAgree : (meetupObj.pollResult.agreedMembers.length/(meetupObj._doc.memberLength + 1)) * 100,
-                percentageOfDisagree : (meetupObj.pollResult.disagreedMembers.length/(meetupObj._doc.memberLength + 1)) * 100,
-                percentageOfNotVoted : (updatednotVotedMembers.length/(meetupObj._doc.memberLength + 1)) * 100
+                percentageOfAgree : (meetupObj.pollResult.agreedMembers.length/(meetupObj.memberLength + 1)) * 100,
+                percentageOfDisagree : (meetupObj.pollResult.disagreedMembers.length/(meetupObj.memberLength + 1)) * 100,
+                percentageOfNotVoted : (updatednotVotedMembers.length/(meetupObj.memberLength + 1)) * 100
         }
 
         meetupObj.updateField('members', updatedMembers)
-        meetupObj.updateField('memberLength', meetupObj._doc.memberLength + 1)
+        meetupObj.updateField('memberLength', meetupObj.memberLength + 1)
         meetupObj.updateField('going', updatedGoing)
         meetupObj.updateField('pollResult', updatedPollResult)
 
         yield meetupObj.saveToDataBase()
 
-        res.send({ success : true, meetup : meetupObj._doc })
+        res.send({ success : true, meetup : meetupObj })
     }),
 
     addBuddy : wrapper(function*(req, res) {
@@ -137,7 +137,7 @@ const meetupModule = {
         var buddies = req.body.buddies
 
         var meetupObj = yield _Meetup.findOneById(meetupId)
-        var updatedGoing = Object.assign([], meetupObj._doc.going)
+        var updatedGoing = Object.assign([], meetupObj.going)
         var updatednotVotedMembers = Object.assign([], meetupObj.pollResult.notVotedMembers)
         for(var i = 0; i < buddies.length; i ++) {
             updatedGoing.push(buddies[i])
@@ -148,15 +148,15 @@ const meetupModule = {
             agreedMembers : meetupObj.pollResult.agreedMembers,
             disagreedMembers : meetupObj.pollResult.disagreedMembers,
             notVotedMembers : updatednotVotedMembers,
-            percentageOfAgree : (meetupObj.pollResult.agreedMembers.length/(meetupObj._doc.memberLength + buddies.length)) * 100,
-            percentageOfDisagree : (meetupObj.pollResult.disagreedMembers.length/(meetupObj._doc.memberLength + buddies.length)) * 100,
-            percentageOfNotVoted : (updatednotVotedMembers.length/(meetupObj._doc.memberLength + buddies.length)) * 100
+            percentageOfAgree : (meetupObj.pollResult.agreedMembers.length/(meetupObj.memberLength + buddies.length)) * 100,
+            percentageOfDisagree : (meetupObj.pollResult.disagreedMembers.length/(meetupObj.memberLength + buddies.length)) * 100,
+            percentageOfNotVoted : (updatednotVotedMembers.length/(meetupObj.memberLength + buddies.length)) * 100
         }
         meetupObj.updateField('going', updatedGoing)
         meetupObj.updateField('pollResult', updatedPollResult)
         yield meetupObj.saveToDataBase()
 
-        res.send({ success : true, meetup : meetupObj._doc })
+        res.send({ success : true, meetup : meetupObj })
     }),
 
     createPoll : wrapper(function*(req, res) {
@@ -188,9 +188,9 @@ const meetupModule = {
             agreedMembers : updatedagreedMembers,
             disagreedMembers : updateddisagreedMembers,
             notVotedMembers : updatednotVotedMembers,
-            percentageOfAgree : (updatedagreedMembers.length / meetupObj._doc.memberLength) * 100,
-            percentageOfDisagree : (updateddisagreedMembers.length / meetupObj._doc.memberLength) * 100,
-            percentageOfNotVoted : (updatednotVotedMembers.length / meetupObj._doc.memberLength) * 100
+            percentageOfAgree : (updatedagreedMembers.length / meetupObj.memberLength) * 100,
+            percentageOfDisagree : (updateddisagreedMembers.length / meetupObj.memberLength) * 100,
+            percentageOfNotVoted : (updatednotVotedMembers.length / meetupObj.memberLength) * 100
         }
         meetupObj.updateField('pollResult', updatedPollResult)
         yield meetupObj.saveToDataBase()
@@ -208,7 +208,7 @@ const meetupModule = {
 
         if( userPushtoken !== '' ) yield sendPushnotification( [ userPushtoken ], `${user.profile.firstName}, You have created poll`, 'Poll created!')
 
-        res.send({ success : true, meetup : meetupObj._doc })
+        res.send({ success : true, meetup : meetupObj })
     }),
     
     addFeedback : wrapper(function*(req, res) {

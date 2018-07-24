@@ -239,7 +239,7 @@ const buddyModule = {
         var buddy = yield _User.findOneById(buddyId);
 
         if( buddy ) {
-            return res.send({ success : true, buddy : buddy._doc, message : 'Success', error : {} })
+            return res.send({ success : true, buddy : buddy, message : 'Success', error : {} })
         }
         else {
             return res.send({ success : false, message : 'Buddy is not exist!', error : {} });

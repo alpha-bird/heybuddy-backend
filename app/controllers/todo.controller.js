@@ -22,7 +22,7 @@ const todoModule = {
 
         var todoObj = new _Todo(data)
         yield todoObj.saveToDataBase()
-        res.send({ success : true, todo : todoObj._doc })
+        res.send({ success : true, todo : todoObj })
     }),
     removeTodo : wrapper(function*(req, res) {
         var todoId = req.body.todoId
