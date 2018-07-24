@@ -1,7 +1,7 @@
 const utilities = require('../lib/utilities'),
       wrapper = require('co-express'),
       AWS = require('aws-sdk'),
-      S3 = new AWS.S3(),
+      S3 = new AWS.S3();
 
 const messageModule = {
     uploadMedia : wrapper(function*(req, res) {
