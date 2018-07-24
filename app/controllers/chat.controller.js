@@ -70,6 +70,10 @@ const chatModule = {
         var chatId = req.body.chatId;
 
         var chat = yield _Chat.findOneById( chatId );
+
+        chat.organizer = yield _User.findOneById( chat.organizer )
+        chat.buddy = yield _User.findOneById( chat.buddy )
+        
         res.send({ success : true, chat : chat });
     })
 }
