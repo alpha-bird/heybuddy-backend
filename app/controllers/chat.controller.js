@@ -28,7 +28,7 @@ const chatModule = {
         newBuddyChats.push(newChat._id);
         buddy.updateField('chats', newBuddyChats);
         yield buddy.saveToDataBase();
-        
+
         var buddyPushToken = yield _Session.getPushTokenByUserID( buddy._id );
         
         var buddyNotification = yield _Notification.findOneById(buddy.notificationId);
@@ -70,7 +70,7 @@ const chatModule = {
         var chatId = req.body.chatId;
 
         var chat = yield _Chat.findOneById( chatId );
-        res.send({ success : true, chat : chat._doc });
+        res.send({ success : true, chat : chat });
     })
 }
 
