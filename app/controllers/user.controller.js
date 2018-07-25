@@ -19,7 +19,7 @@ const userModule = {
     pushid : push token
     */
     signUp : wrapper( function*(req, res) {
-            const { email, password, pin, profile, pushId } = req.body
+            const { email, password, pin, profile, settings, pushId } = req.body
             var hashedPassword = yield utilities.getHashPassword( password ) //Hash Password
             
             var newNotification = new _Notification( ) //New Empty Notification Document
@@ -30,6 +30,7 @@ const userModule = {
                 password : hashedPassword,
                 pin : pin,
                 profile : profile,
+                settings : settings,
                 createdTime : moment().utc().format(),
                 notificationId : newNotification._id
             }) //New User with Notification

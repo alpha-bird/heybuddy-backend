@@ -145,6 +145,7 @@ const userSchema = new Schema({
     notificationId : {
         type : Schema.Types.ObjectId,
         ref: 'notification',
+        required : true
     }
 });
 
