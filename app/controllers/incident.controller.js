@@ -69,7 +69,7 @@ const incidentModule = {
                 tokenIds.push(buddyToken)
             }
         }
-        if( tokenIds !== [] ) yield sendPushnotification(tokenIds, `${user.profile.firstName} just created new Incident!!`, 'Incident happened!')
+        if( tokenIds.length !== 0 ) yield sendPushnotification(tokenIds, `${user.profile.firstName} just created new Incident!!`, 'Incident happened!')
         
         res.send({ success : true })
     }),
