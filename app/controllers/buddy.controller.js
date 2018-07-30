@@ -71,7 +71,7 @@ const buddyModule = {
             var buddyNotification = yield _Notification.findOneById(buddy.notificationId);
             buddyNotification.putNotification({
                 title : 'Buddy Request',
-                description : `${user.profile.firstName} + sent you buddy request!`,
+                description : `${user.profile.firstName} sent you buddy request!`,
                 datetime : moment(Date.now()).utc().format(),
                 image : ''
             })
@@ -80,7 +80,7 @@ const buddyModule = {
             if( buddyPushToken !== '' ) {
                 console.log("Sending push notification ... ");
                 var data = {
-                    contents: { 'en' : `${user.profile.firstName} + sent you buddy request!` },
+                    contents: { 'en' : `${user.profile.firstName} sent you buddy request!` },
                     headings: { 'en' : 'Buddy Request'},
                     ios_badgeType : 'Increase',
                     ios_badgeCount : 1,
@@ -138,7 +138,7 @@ const buddyModule = {
                 var buddyNotification = yield _Notification.findOneById(buddy.notificationId);
                 buddyNotification.putNotification({
                     title : 'Invitation accepted',
-                    description : `${user.profile.firstName} + accepted your buddy invitation!`,
+                    description : `${user.profile.firstName} accepted your buddy invitation!`,
                     datetime : moment(Date.now()).utc().format(),
                     image : ''
                 })
@@ -146,7 +146,7 @@ const buddyModule = {
                 
                 if ( buddyPushToken !== '' ) {
                     var data = {
-                        contents: { 'en' : `${user.profile.firstName} + accepted your buddy invitation!` },
+                        contents: { 'en' : `${user.profile.firstName} accepted your buddy invitation!` },
                         headings: { 'en' : 'Invitation accepted'},
                         ios_badgeType : 'Increase',
                         ios_badgeCount : 1,
@@ -198,7 +198,7 @@ const buddyModule = {
                 var buddyNotification = yield _Notification.findOneById(buddy.notificationId);
                 buddyNotification.putNotification({
                     title : 'Invitation declined!',
-                    description : `${user.profile.firstName} + decline your buddy invitation!`,
+                    description : `${user.profile.firstName} decline your buddy invitation!`,
                     datetime : moment(Date.now()).utc().format(),
                     image : ''
                 })
@@ -206,7 +206,7 @@ const buddyModule = {
 
                 if ( buddyPushToken !== '' ) {
                     var data = {
-                        contents: { 'en' : `${user.profile.firstName} + decline your buddy invitation!` },
+                        contents: { 'en' : `${user.profile.firstName} decline your buddy invitation!` },
                         headings: { 'en' : 'Invitation declined!'},
                         ios_badgeType : 'Increase',
                         ios_badgeCount : 1,

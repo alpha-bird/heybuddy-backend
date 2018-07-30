@@ -42,7 +42,7 @@ const chatModule = {
 
         if ( buddyPushToken !== '' ) {
             var data = {
-                contents: { 'en' : `${user.profile.firstName} + created chat with you!` },
+                contents: { 'en' : `${user.profile.firstName} created chat with you!` },
                 headings: { 'en' : 'New chat created!'},
                 ios_badgeType : 'Increase',
                 ios_badgeCount : 1,
