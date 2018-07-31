@@ -71,7 +71,7 @@ newsfeedModel.findOneById = function( id ) {
 
 newsfeedModel.findAll = function( id ) {
     return new Promise( ( resolve, reject ) => { 
-        newsfeedModel.findOne({ }, (err, newsfeeds) => {
+        newsfeedModel.find({ }, (err, newsfeeds) => {
             if(err) reject(err);
             else resolve(newsfeeds);
         });

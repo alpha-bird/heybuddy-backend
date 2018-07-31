@@ -146,7 +146,6 @@ const newsFeedModule = {
         }),
     getAllNewsFeed : wrapper(function*(req, res) {
             var newsFeeds = yield _NewsFeed.findAll()
-
             for( var i = 0 ; i < newsFeeds.length; i ++ ) {
                 newsFeeds[i].createdBy = yield _User.findOneById(newsFeeds[i].createdBy)
                 for( var j = 0; j < newsFeeds[i].likes.likedBy.length ; j ++ ) {
