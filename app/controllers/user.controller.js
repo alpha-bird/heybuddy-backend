@@ -421,6 +421,7 @@ const userModule = {
             var userId = req.body.userId
             var newUserinfo = req.body.newuserinfo
             var modifiedUser = yield _User.updateUser( userId, newUserinfo )
+            yield modifiedUser.saveToDataBase()
             res.send({ success : true, res : modifiedUser })
         })
 }
