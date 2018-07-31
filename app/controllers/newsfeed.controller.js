@@ -65,7 +65,7 @@ const newsFeedModule = {
                     tokenIds.push(viewerToken)
                 }
             }
-            yield sendPushnotification(tokenIds, `${user.profile.firstName} just posted new Newsfeed!!`, 'Newsfeed posted!')
+            if( tokenIds.length !== 0 ) yield sendPushnotification(tokenIds, `${user.profile.firstName} just posted new Newsfeed!!`, 'Newsfeed posted!')
             res.send({ success : true, newsFeed : newsFeed })
         }),
     likePost : wrapper(function*( req, res ){
