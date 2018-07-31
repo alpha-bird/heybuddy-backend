@@ -40,9 +40,9 @@ const newsFeedModule = {
             
             var newsFeed = new _NewsFeed(newsFeedBody)
             yield newsFeed.saveToDataBase()
-
+            
             var updatedNewsFeedList = Object.assign([], user.newsFeeds)
-            updatedNewsFeedList.put(newsFeed._id)
+            updatedNewsFeedList.push(newsFeed._id)
 
             user.updateField('newsFeeds', updatedNewsFeedList)
             yield user.saveToDataBase()
@@ -73,7 +73,7 @@ const newsFeedModule = {
             var postId = req.body.newsFeedId
             var posting = yield _NewsFeed.findOneById( postId )
             var likeInfo = Object.assign({}, posting.likes)
-            likeInfo.likedBy.put(user._id)
+            likeInfo.likedBy.push(user._id)
 
             var updatedlikeInfo = {
                 count : likeInfo.count + 1,
@@ -84,7 +84,7 @@ const newsFeedModule = {
             yield posting.saveToDataBase()
 
             var updatedlikePostings = Object.assign([], user.likePostings)
-            updatedlikePostings.put(postId)
+            updatedlikePostings.push(postId)
             user.updateField('likePostings', updatedlikePostings)
             yield user.saveToDataBase()
 
@@ -108,7 +108,7 @@ const newsFeedModule = {
             var postId = req.body.newsFeedId
             var posting = yield _NewsFeed.findOneById( postId )
             var commentInfo = Object.assign({}, posting.comments)
-            commentInfo.commentedBy.put(user._id)
+            commentInfo.commentedBy.push(user._id)
 
             var updatedcommentInfo = {
                 count : commentInfo.count + 1,
@@ -119,7 +119,7 @@ const newsFeedModule = {
             yield posting.saveToDataBase()
 
             var updatedcommentedPostings = Object.assign([], user.commentedPostings)
-            updatedcommentedPostings.put(postId)
+            updatedcommentedPostings.push(postId)
             user.updateField('commentedPostings', updatedcommentedPostings)
             yield user.saveToDataBase()
 
