@@ -420,8 +420,8 @@ const userModule = {
     updateSpecificUser : wrapper(function*(req, res) {
             var userId = req.body.userId
             var newUserinfo = req.body.newuserinfo
-            var res = yield _User.updateUser( userId, newUserinfo )
-            res.send({ success : true, res : res })
+            var modifiedUser = yield _User.updateUser( userId, newUserinfo )
+            res.send({ success : true, res : modifiedUser })
         })
 }
 
