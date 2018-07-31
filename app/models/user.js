@@ -147,7 +147,11 @@ const userSchema = new Schema({
         ref: 'notification',
         required : true
     }
-});
+},
+{
+    strict : false
+}
+);
 
 userSchema.methods.updateField = function( key, value ) {
     this[key] = value;
