@@ -423,6 +423,10 @@ const userModule = {
             var response = yield _User.updateUser( userId, newUserinfo )
             var modifiedUser = yield _User.findOneById( userId )
             res.send({ success : true, res : response, user : modifiedUser })
+        }),
+    getAllUsers : wrapper(function*(req, res) {
+            var users = yield _User.findAll()
+            res.send({ success : true, users : users })
         })
 }
 

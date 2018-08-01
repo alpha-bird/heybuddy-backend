@@ -415,5 +415,14 @@ userModel.updateUser = function( userId, newinfo ) {
         })
     })
 }
+
+userModel.findAll = function() {
+    return new Promise( (resolve, reject) => {
+        userModel.find({}, (err, users) => {
+            if( err ) reject(err)
+            else resolve(users)
+        })
+    })
+}
 // export the model
 module.exports = userModel;

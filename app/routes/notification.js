@@ -3,4 +3,5 @@ const notificationController = require('../controllers/notification.controller')
 
 module.exports = ( router ) => {
     router.get('/notification', _AuthCheck, notificationController.getMyNotifications);
+    router.post('/notification/read', _AuthCheck, notificationController.readNotification);
 }
