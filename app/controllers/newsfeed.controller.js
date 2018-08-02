@@ -146,8 +146,8 @@ const newsFeedModule = {
                 for( var j = 0; j < newsFeeds[i].likes.likedBy.length ; j ++ ) {
                     newsFeeds[i].likes.likedBy[j] = yield _User.findOneById(newsFeeds[i].likes.likedBy[j])
                 }
-                for( var j = 0; j < newsFeeds[i].comments.commentedBy.length ; j ++ ) {
-                    newsFeeds[i].comments.commentedBy[j] = yield _User.findOneById(newsFeeds[i].comments.commentedBy[j])
+                for( var j = 0; j < newsFeeds[i].comments.length ; j ++ ) {
+                    newsFeeds[i].comments[j].commentedBy = yield _User.findOneById(newsFeeds[i].comments[j].commentedBy)
                 }
             }
             res.send({ success : true, newfeed : newsFeeds })
