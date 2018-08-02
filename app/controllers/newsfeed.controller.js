@@ -133,6 +133,15 @@ const newsFeedModule = {
 
             res.send({ success : true })
         }),
+    getComments : wrapper(function*(req, res) {
+            var postId = req.body.newsFeedId
+            var posting = yield _NewsFeed.findOneById( postId )
+
+            for( var i = 0; i < posting.comments.length ; i ++ ) {
+                posting.comments[i].commentedBy = yield _User.findOneById(posting.comments[i].commentedBy)
+            }
+            res.send({ success : true, comments : posting.comments })
+        }),
     getNewsFeedCreatedByMe : wrapper(function*( req, res ) {
             var user = req.session.user
             var newsFeeds = yield _NewsFeed.findAllCreatedBySomeone( user._id )
