@@ -18,7 +18,7 @@ function sendPushnotification( tokenIds, contents, headings ) {
         }
         _PushNotification.sendPush( data ).then( errors => {
             if( errors ) {
-                console.log('Sending push notification failed!', pushRes.errors)
+                console.log('Sending push notification failed!', errors)
                 resolve(false)
             }
             else {
