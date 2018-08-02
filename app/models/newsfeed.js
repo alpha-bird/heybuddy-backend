@@ -30,14 +30,12 @@ const newsfeedSchema = new Schema({
         }
     },
     comments : {
-        count : {
-            type : Number,
-            default : 0
-        },
-        commentedBy : {
-            type : Array,
-            default : []
-        }
+        type : Array,
+        default : []
+    },
+    postType : {
+        type : String,
+        default : 'public' //public, personal, company
     }
 });
 

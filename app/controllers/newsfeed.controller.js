@@ -106,21 +106,16 @@ const newsFeedModule = {
     commentPost : wrapper(function*(req, res) {
             var user = req.session.user
             var postId = req.body.newsFeedId
-            var posting = yield _NewsFeed.findOneById( postId )
-            var commentInfo = Object.assign({}, posting.comments)
-            commentInfo.commentedBy.push(user._id)
+            var content = req.body.content
 
-            var updatedcommentInfo = {
-                count : commentInfo.count + 1,
-                commentedBy : commentInfo.commentedBy
-            }
-            
-            posting.updateField('comments', updatedcommentInfo)
+            var posting = yield _NewsFeed.findOneById( postId )
+            posting.comments.push({
+                commentedBy : user._id,
+                content : content
+            })
             yield posting.saveToDataBase()
 
-            var updatedcommentedPostings = Object.assign([], user.commentedPostings)
-            updatedcommentedPostings.push(postId)
-            user.updateField('commentedPostings', updatedcommentedPostings)
+            user.commentedPostings.push(postId)
             yield user.saveToDataBase()
 
             var posterToken = yield _Session.getPushTokenByUserID( posting.createdBy );
