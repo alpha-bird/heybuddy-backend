@@ -35,7 +35,6 @@ const incidentModule = {
     createIncident : wrapper(function*( req, res ) {
         var user = req.session.user;
         var incidentbody = {
-            incidentId : req.body.incident.id,
             status : 'open',
             createdTime : moment(Date.now()).utc().format(),
             description : req.body.incident.description,
@@ -76,12 +75,10 @@ const incidentModule = {
 
     closeIncident : wrapper(function*( req, res ) {
         var incidentId = req.body.incidentId;
-
-        _Incident.findOne( { incidentId : incidentId }, wrapper(function*(err, incident) {
-            incident.updateField('status', 'closed')
-            yield incident.saveToDataBase()
-            res.send( { success : true })
-        }))
+        var incident = yield _Incident.findOneById(incidentId)
+        incident.status = 'closed'
+        yield incident.saveToDataBase()
+        res.send( { success : true })
     }),
 
     getAll : wrapper(function*( req, res ) {

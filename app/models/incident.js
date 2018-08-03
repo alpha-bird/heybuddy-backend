@@ -2,11 +2,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const incidentSchema = new Schema({
-    incidentId : {
-        type : String,
-        unique : true,
-        required : true
-    },
     status : {
         type : String,
         default : 'open',
