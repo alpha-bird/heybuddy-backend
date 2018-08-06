@@ -72,36 +72,42 @@ const newsFeedModule = {
             var user = req.session.user
             var postId = req.body.newsFeedId
             var posting = yield _NewsFeed.findOneById( postId )
-            var likeInfo = Object.assign({}, posting.likes)
-            likeInfo.likedBy.push(user._id)
 
-            var updatedlikeInfo = {
-                count : likeInfo.count + 1,
-                likedBy : likeInfo.likedBy
+            if ( posting.likes.includes(user._id) ) {
+                var likeInfo = Object.assign({}, posting.likes)
+                likeInfo.likedBy.push(user._id)
+
+                var updatedlikeInfo = {
+                    count : likeInfo.count + 1,
+                    likedBy : likeInfo.likedBy
+                }
+                
+                posting.updateField('likes', updatedlikeInfo)
+                yield posting.saveToDataBase()
+
+                var updatedlikePostings = Object.assign([], user.likePostings)
+                updatedlikePostings.push(postId)
+                user.updateField('likePostings', updatedlikePostings)
+                yield user.saveToDataBase()
+
+                var posterToken = yield _Session.getPushTokenByUserID( posting.createdBy )
+                if ( posterToken !== '' ) yield sendPushnotification([ posterToken ], `${user.profile.firstName} like your post!`, 'Like post!')
+
+                var owner = yield _User.findOneById(posting.createdBy)
+                var notification = yield _Notification.findOneById(owner.notificationId)
+                notification.putNotification({
+                    title : 'Like post!',
+                    description : `${user.profile.firstName} like your post!`,
+                    datetime : moment(Date.now()).utc().format(),
+                    image : ''
+                })
+                yield notification.saveToDataBase()
+
+                res.send({ success : true })
             }
-            
-            posting.updateField('likes', updatedlikeInfo)
-            yield posting.saveToDataBase()
-
-            var updatedlikePostings = Object.assign([], user.likePostings)
-            updatedlikePostings.push(postId)
-            user.updateField('likePostings', updatedlikePostings)
-            yield user.saveToDataBase()
-
-            var posterToken = yield _Session.getPushTokenByUserID( posting.createdBy )
-            if ( posterToken !== '' ) yield sendPushnotification([ posterToken ], `${user.profile.firstName} like your post!`, 'Like post!')
-
-            var owner = yield _User.findOneById(posting.createdBy)
-            var notification = yield _Notification.findOneById(owner.notificationId)
-            notification.putNotification({
-                title : 'Like post!',
-                description : `${user.profile.firstName} like your post!`,
-                datetime : moment(Date.now()).utc().format(),
-                image : ''
-            })
-            yield notification.saveToDataBase()
-
-            res.send({ success : true })
+            else {
+                res.send({ success : false, reason : 'Already liked!' })
+            }
         }),
     commentPost : wrapper(function*(req, res) {
             var user = req.session.user
