@@ -3,7 +3,10 @@ const utilities = require('../lib/utilities'),
       _User = require('../models/user'),
       _Meetup = require('../models/meetup'),
       _AnonymousTip = require('../models/anonymoustip'),
-      _Incident = require('../models/incident')
+      _Incident = require('../models/incident'),
+      _Fakecall = require('../models/fakecall'),
+      _Safewalk = require('../models/safewalk'),
+      _Eyeme = require('../models/eyeme'),
       moment = require('moment');
 
 const incidentModule = {
@@ -13,12 +16,18 @@ const incidentModule = {
         var numberOfAnonymousTip = yield _AnonymousTip.getNumberOfAnonymousTipCreatedLastweek()
         var numberOfTimer = 0
         var numberOfReport = yield _Incident.getNumberOfIncidentCreatedLastweek()
+        var numberOfFakecall = yield _Fakecall.getNumberOfFakecallCreatedLastweek()
+        var numberOfSafewalk = yield _Safewalk.getNumberOfSafewalkCreatedLastweek()
+        var numberOfEyeme = yield _Eyeme.getNumberOfEyemeCreatedLastweek()
         res.send({
             user : numberOfUser,
             meetup : numberOfMeetup,
             anonymoustip : numberOfAnonymousTip,
             timer : numberOfTimer,
-            incident : numberOfReport
+            incident : numberOfReport,
+            fakecall : numberOfFakecall,
+            safewalk : numberOfSafewalk,
+            eyeme : numberOfEyeme
         })
     }),
     getChartByLastmonth : wrapper(function*(req, res) {
@@ -27,12 +36,18 @@ const incidentModule = {
         var numberOfAnonymousTip = yield _AnonymousTip.getNumberOfAnonymousTipCreatedLastmonth()
         var numberOfTimer = 0
         var numberOfReport = yield _Incident.getNumberOfIncidentCreatedLastmonth()
+        var numberOfFakecall = yield _Fakecall.getNumberOfFakecallCreatedLastmonth()
+        var numberOfSafewalk = yield _Safewalk.getNumberOfSafewalkCreatedLastmonth()
+        var numberOfEyeme = yield _Eyeme.getNumberOfEyemeCreatedLastmonth()
         res.send({
             user : numberOfUser,
             meetup : numberOfMeetup,
             anonymoustip : numberOfAnonymousTip,
             timer : numberOfTimer,
-            incident : numberOfReport
+            incident : numberOfReport,
+            fakecall : numberOfFakecall,
+            safewalk : numberOfSafewalk,
+            eyeme : numberOfEyeme
         })
     }),
     getChartByPickedDate : wrapper(function*(req, res) {
@@ -43,12 +58,18 @@ const incidentModule = {
         var numberOfAnonymousTip = yield _AnonymousTip.getNumberOfAnonymousTipByDate(startDate, endDate)
         var numberOfTimer = 0
         var numberOfReport = yield _Incident.getNumberOfIncidentByDate(startDate, endDate)
+        var numberOfFakecall = yield _Fakecall.getNumberOfFakecallByDate(startDate, endDate)
+        var numberOfSafewalk = yield _Safewalk.getNumberOfSafewalkByDate(startDate, endDate)
+        var numberOfEyeme = yield _Eyeme.getNumberOfEyemeByDate(startDate, endDate)
         res.send({
             user : numberOfUser,
             meetup : numberOfMeetup,
             anonymoustip : numberOfAnonymousTip,
             timer : numberOfTimer,
-            incident : numberOfReport
+            incident : numberOfReport,
+            fakecall : numberOfFakecall,
+            safewalk : numberOfSafewalk,
+            eyeme : numberOfEyeme
         })
     }),
     getDataForBox1 : wrapper(function*(req, res) {

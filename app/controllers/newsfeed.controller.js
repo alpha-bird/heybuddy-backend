@@ -6,28 +6,6 @@ const utilities = require('../lib/utilities'),
       _Notification = require('../models/notification'),
       _PushNotification = require('../lib/pushnotification');
 
-function sendPushnotification( tokenIds, contents, headings ) {
-    return new Promise( (resolve ,reject) => {
-        var data = {
-            contents: { 'en' : contents },
-            headings: { 'en' : headings },
-            ios_badgeType : 'Increase',
-            ios_badgeCount : 1,
-            include_player_ids : tokenIds
-        }
-        _PushNotification.sendPush( data ).then( errors => {
-            if( errors ) {
-                console.log('Sending push notification failed!', errors)
-                resolve(false)
-            }
-            else {
-                console.log('Sending push notification successed!')
-                resolve(true)
-            }
-        })
-    })
-}
-
 const newsFeedModule = {
     postNewsFeed : wrapper(function*( req, res ) {
             var user = req.session.user
@@ -56,8 +34,9 @@ const newsFeedModule = {
                 notification.putNotification({
                     title : 'Newsfeed posted!',
                     description : `${user.profile.firstName} just posted new Newsfeed!!`,
-                    datetime : moment(Date.now()).utc().format(),
-                    image : ''
+                    image : '',
+                    timestamp : moment(Date.now()).utc().format(),
+                    isread : false
                 })
                 yield notification.saveToDataBase()
 
@@ -65,7 +44,7 @@ const newsFeedModule = {
                     tokenIds.push(viewerToken)
                 }
             }
-            if( tokenIds.length !== 0 ) yield sendPushnotification(tokenIds, `${user.profile.firstName} just posted new Newsfeed!!`, 'Newsfeed posted!')
+            if( tokenIds.length !== 0 ) yield _PushNotification.send(tokenIds, `${user.profile.firstName} just posted new Newsfeed!!`, 'Newsfeed posted!')
             res.send({ success : true, newsFeed : newsFeed })
         }),
     likePost : wrapper(function*( req, res ){
@@ -90,18 +69,19 @@ const newsFeedModule = {
                 user.updateField('likePostings', updatedlikePostings)
                 yield user.saveToDataBase()
 
-                var posterToken = yield _Session.getPushTokenByUserID( posting.createdBy )
-                if ( posterToken !== '' ) yield sendPushnotification([ posterToken ], `${user.profile.firstName} like your post!`, 'Like post!')
-
                 var owner = yield _User.findOneById(posting.createdBy)
                 var notification = yield _Notification.findOneById(owner.notificationId)
                 notification.putNotification({
                     title : 'Like post!',
                     description : `${user.profile.firstName} like your post!`,
-                    datetime : moment(Date.now()).utc().format(),
-                    image : ''
+                    image : '',
+                    timestamp : moment(Date.now()).utc().format(),
+                    isread : false
                 })
                 yield notification.saveToDataBase()
+
+                var posterToken = yield _Session.getPushTokenByUserID( posting.createdBy )
+                if ( posterToken !== '' ) yield _PushNotification.send([ posterToken ], `${user.profile.firstName} like your post!`, 'Like post!')
 
                 res.send({ success : true })
             }
@@ -123,19 +103,20 @@ const newsFeedModule = {
 
             user.commentedPostings.push(postId)
             yield user.saveToDataBase()
-
-            var posterToken = yield _Session.getPushTokenByUserID( posting.createdBy );
-            if ( posterToken !== '' ) yield sendPushnotification([ posterToken ], `${user.profile.firstName} made comment on your post!`, 'Comment post!')
             
             var owner = yield _User.findOneById(posting.createdBy)
             var notification = yield _Notification.findOneById(owner.notificationId)
             notification.putNotification({
                 title : 'Comment post!',
                 description : `${user.profile.firstName} made comment on your post!`,
-                datetime : moment(Date.now()).utc().format(),
-                image : ''
+                image : '',
+                timestamp : moment(Date.now()).utc().format(),
+                isread : false
             })
             yield notification.saveToDataBase()
+
+            var posterToken = yield _Session.getPushTokenByUserID( posting.createdBy );
+            if ( posterToken !== '' ) yield sendPushnotification([ posterToken ], `${user.profile.firstName} made comment on your post!`, 'Comment post!')
 
             res.send({ success : true })
         }),

@@ -21,8 +21,7 @@ const notificationModule = {
         var user = req.session.user
         var notificationIndex = req.body.notificationIndex
         var fullNotification = yield _Notification.findOneById(user.notificationId)
-        fullNotification.oldnotifications.push(fullNotification.newnotifications[notificationIndex])
-        fullNotification.newnotifications.splice(notificationIndex, 1)
+        fullNotification.notifications[notificationIndex].isread = true
         yield fullNotification.saveToDataBase()
         res.send({ success : true })
     })

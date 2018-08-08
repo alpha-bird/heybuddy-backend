@@ -7,28 +7,6 @@ const utilities = require('../lib/utilities'),
       _Notification = require('../models/notification'),
       _PushNotification = require('../lib/pushnotification');
 
-function sendPushnotification( tokenIds, contents, headings ) {
-    return new Promise( (resolve ,reject) => {
-        var data = {
-            contents: { 'en' : contents },
-            headings: { 'en' : headings },
-            ios_badgeType : 'Increase',
-            ios_badgeCount : 1,
-            include_player_ids : tokenIds
-        }
-        _PushNotification.sendPush( data ).then( errors => {
-            if( errors ) {
-                console.log('Sending push notification failed!', errors)
-                resolve(false)
-            }
-            else {
-                console.log('Sending push notification successed!')
-                resolve(true)
-            }
-        })
-    })
-}
-
 const meetupModule = {
     createMeetUp : wrapper(function*( req, res ) {
         var meetupData = req.body.meetupInfo;
@@ -71,12 +49,13 @@ const meetupModule = {
         notification.putNotification({
             title : 'Meetup started!',
             description : `${user.profile.firstName}, You just created new Meetup!!`,
-            datetime : moment(Date.now()).utc().format(),
-            image : ''
+            image : '',
+            timestamp : moment(Date.now()).utc().format(),
+            isread : false
         })
         yield notification.saveToDataBase()
-
-        if( userPushtoken !== '' ) yield sendPushnotification( [ userPushtoken ], `${user.profile.firstName}, You just created new Meetup!!`, 'Meetup started!')
+        
+        if( userPushtoken !== '' ) yield _PushNotification.send( [ userPushtoken ], `${user.profile.firstName}, You just created new Meetup!!`, 'Meetup started!')
 
         res.send({ success : true, meetup : newMeetUp })
     }),
@@ -201,12 +180,13 @@ const meetupModule = {
         notification.putNotification({
             title : 'Poll created!',
             description : `${user.profile.firstName}, You have created poll`,
-            datetime : moment(Date.now()).utc().format(),
-            image : ''
+            image : '',
+            timestamp : moment(Date.now()).utc().format(),
+            isread : false
         })
         yield notification.saveToDataBase()
 
-        if( userPushtoken !== '' ) yield sendPushnotification( [ userPushtoken ], `${user.profile.firstName}, You have created poll`, 'Poll created!')
+        if( userPushtoken !== '' ) yield _PushNotification.send( [ userPushtoken ], `${user.profile.firstName}, You have created poll`, 'Poll created!')
 
         res.send({ success : true, meetup : meetupObj })
     }),

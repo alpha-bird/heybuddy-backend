@@ -1,4 +1,5 @@
 const incidentController = require('../controllers/incident.controller'),
+      restemplateController = require('../controllers/restemplate.controller'),
       _AuthCheck = require('../auth');
 
 module.exports = ( router ) => {
@@ -10,4 +11,6 @@ module.exports = ( router ) => {
     router.post('/incident/response/save', _AuthCheck, incidentController.saveResponse);
     router.post('/incident/comment/save', _AuthCheck, incidentController.saveComment);
     router.post('/incident/media/upload', _AuthCheck, incidentController.uploadMedia);
+    router.post('/incident/response/templates', _AuthCheck, restemplateController.getall);
+    router.post('/incident/response/templates/create', _AuthCheck, restemplateController.saveOne);
 }

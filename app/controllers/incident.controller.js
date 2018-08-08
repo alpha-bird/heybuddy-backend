@@ -9,28 +9,6 @@ const utilities = require('../lib/utilities'),
       _Notification = require('../models/notification'),
       _PushNotification = require('../lib/pushnotification');
 
-function sendPushnotification( tokenIds, contents, headings ) {
-    return new Promise( (resolve ,reject) => {
-        var data = {
-            contents: { 'en' : contents },
-            headings: { 'en' : headings },
-            ios_badgeType : 'Increase',
-            ios_badgeCount : 1,
-            include_player_ids : tokenIds
-        }
-        _PushNotification.sendPush( data ).then( errors => {
-            if( errors ) {
-                console.log('Sending push notification failed!', errors)
-                resolve(false)
-            }
-            else {
-                console.log('Sending push notification successed!')
-                resolve(true)
-            }
-        })
-    })
-}
-
 const incidentModule = {
     createIncident : wrapper(function*( req, res ) {
         var user = req.session.user;
@@ -49,7 +27,10 @@ const incidentModule = {
         
         var newIncident = new _Incident(incidentbody)
         yield newIncident.saveToDataBase()
-
+        
+        user.incidents.push(newIncident._id)
+        yield user.saveToDataBase()
+        
         var tokenIds = [];
         for( var i = 0; i < user.buddies.length; i ++ ) {
             var buddyToken = yield _Session.getPushTokenByUserID( user.buddies[i] )
@@ -59,8 +40,9 @@ const incidentModule = {
             notification.putNotification({
                 title : 'Incident happened!',
                 description : `${user.profile.firstName} just created new Incident!!`,
-                datetime : moment(Date.now()).utc().format(),
-                image : ''
+                image : '',
+                timestamp : moment(Date.now()).utc().format(),
+                isread : false
             })
             yield notification.saveToDataBase()
             
@@ -68,7 +50,7 @@ const incidentModule = {
                 tokenIds.push(buddyToken)
             }
         }
-        if( tokenIds.length !== 0 ) yield sendPushnotification(tokenIds, `${user.profile.firstName} just created new Incident!!`, 'Incident happened!')
+        if( tokenIds.length !== 0 ) yield _PushNotification.send(tokenIds, `${user.profile.firstName} just created new Incident!!`, 'Incident happened!')
         
         res.send({ success : true })
     }),
@@ -118,9 +100,8 @@ const incidentModule = {
         var incidentId = req.body.incidentId
         var newResponse = req.body.response
         var incident = yield _Incident.findOneById(incidentId)
-        var newResponses = Object.assign([], incident.responses)
-        newResponses.push(newResponse)
-        incident.updateField('responses', newResponses)
+        incident.responses.push(newResponse)
+        yield incident.saveToDataBase()
         res.send({
             success : true,
             comments : newResponses
@@ -139,10 +120,10 @@ const incidentModule = {
     saveComment : wrapper(function*(req, res) {
         var incidentId = req.body.incidentId
         var newComment = req.body.comment
+        
         var incident = yield _Incident.findOneById(incidentId)
-        var newComments = Object.assign([], incident.comments)
-        newComments.push(newComment)
-        incident.updateField('comments', newComments)
+        incident.comments.push(newComment)
+        yield incident.saveToDataBase()
         res.send({
             success : true,
             comments : newComments

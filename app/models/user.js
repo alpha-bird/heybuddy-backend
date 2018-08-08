@@ -54,6 +54,18 @@ const userSchema = new Schema({
             default : ''
         },
         position : {
+            address : {
+                type : String,
+                default : ''
+            },
+            zipcode : {
+                type : String,
+                default : ''
+            },
+            floorNumber : {
+                type : String,
+                default : ''
+            },
             latitude : {
                 type : Number,
                 default : 0
@@ -62,6 +74,14 @@ const userSchema = new Schema({
                 type : Number,
                 default : 0
             }
+        },
+        graduationYear : {
+            type : Number,
+            default : 0
+        },
+        extortionNumber : {
+            type : Number,
+            default : 0
         }
     },
     settings : {
@@ -94,7 +114,7 @@ const userSchema = new Schema({
         type : Array,
         default : []
     },
-    emergencies : {
+    incidents : {
         type : Array,
         default : []
     },
@@ -147,11 +167,7 @@ const userSchema = new Schema({
         ref: 'notification',
         required : true
     }
-},
-{
-    strict : false
-}
-);
+});
 
 userSchema.methods.updateField = function( key, value ) {
     this[key] = value;

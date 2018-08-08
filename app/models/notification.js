@@ -5,19 +5,28 @@ const Schema = mongoose.Schema;
 item : {
     title : '',
     description : '',
-    datetime : '',
-    image : ''
+    image : ''.
+    timestamp : '',
+    isread : true/false
 }
 */
 
 const notificationSchema = new Schema({
-    newnotifications : {
+    notifications : {
         type : Array,
         default : []
     },
-    oldnotifications : {
-        type : Array,
-        default : []
+    numberOfRead : {
+        type : Number,
+        default : 0
+    },
+    numberOfUnRead : {
+        type : Number,
+        default : 0
+    },
+    numberOfNotification : {
+        type : Number,
+        default : 0
     }
 });
 
@@ -31,7 +40,9 @@ notificationSchema.methods.saveToDataBase = function( ) {
 }
 
 notificationSchema.methods.putNotification = function( notification ) {
-    this.newnotifications.push(notification)
+    this.notifications.push(notification)
+    this.numberOfUnRead = this.numberOfUnRead + 1
+    this.numberOfNotification = this.notifications.length
 }
 
 const notificationModel = mongoose.model('notification', notificationSchema);

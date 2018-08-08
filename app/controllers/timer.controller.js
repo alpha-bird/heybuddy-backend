@@ -16,28 +16,6 @@ function getTimeLeft( estimationTime ) {
     return left
 }
 
-function sendPushnotification( tokenIds, contents, headings ) {
-    return new Promise( (resolve ,reject) => {
-        var data = {
-            contents: { 'en' : contents },
-            headings: { 'en' : headings },
-            ios_badgeType : 'Increase',
-            ios_badgeCount : 1,
-            include_player_ids : tokenIds
-        }
-        _PushNotification.sendPush( data ).then( errors => {
-            if( errors ) {
-                console.log('Sending push notification failed!', errors)
-                resolve(false)
-            }
-            else {
-                console.log('Sending push notification successed!')
-                resolve(true)
-            }
-        })
-    })
-}
-
 const timerModule = {
     createTimer : wrapper(function*( req, res ) {
         var user = req.session.user
@@ -57,17 +35,13 @@ const timerModule = {
                 notification.putNotification({
                     title : 'Complete your Timer!!',
                     description : `${user.profile.firstName}, Complete your timer by confirmming your pin code!!`,
-                    datetime : moment(Date.now()).utc().format(),
-                    image : ''
+                    image : '',
+                    timestamp : moment(Date.now()).utc().format(),
+                    isread : false
                 })
                 yield notification.saveToDataBase()
 
-                if( userPushtoken !== '' ) {
-                    console.log("Sending push notification for timer completion ... ");
-                    yield sendPushnotification( [userPushtoken], 
-                        `${user.profile.firstName}, Complete your timer by confirmming your pin code!!`,
-                        'Complete your Timer!!' )
-                }
+                if( userPushtoken !== '' ) yield _PushNotification.send([userPushtoken], `${user.profile.firstName}, Complete your timer by confirmming your pin code!!`,'Complete your Timer!!' )
                 /*
                 * Runs every weekday (Monday through Friday)
                 * at 11:30:00 AM. It does not run on Saturday
@@ -98,12 +72,13 @@ const timerModule = {
         notification.putNotification({
             title : 'Timer started!',
             description : `${user.profile.firstName}, You just started your timer!!`,
-            datetime : moment(Date.now()).utc().format(),
-            image : ''
+            image : '',
+            timestamp : moment(Date.now()).utc().format(),
+            isread : false
         })
         yield notification.saveToDataBase()
 
-        if( userPushtoken !== '' ) yield sendPushnotification( [ userPushtoken ], `${user.profile.firstName}, You just started your timer!!`, 'Timer started!')
+        if( userPushtoken !== '' ) yield _PushNotification.send( [ userPushtoken ], `${user.profile.firstName}, You just started your timer!!`, 'Timer started!')
 
         var tokenIds = [];
         for( var i = 0; i < timerBody.viewers.length; i ++ ) {
@@ -112,8 +87,9 @@ const timerModule = {
             notification.putNotification({
                 title : 'New Timer started!',
                 description :`${user.profile.firstName} just started new timer!!`,
-                datetime : moment(Date.now()).utc().format(),
-                image : ''
+                image : '',
+                timestamp : moment(Date.now()).utc().format(),
+                isread : false
             })
             yield notification.saveToDataBase()
             
@@ -122,7 +98,8 @@ const timerModule = {
                 tokenIds.push(viewerToken)
             }
         }
-        yield sendPushnotification(tokenIds, `${user.profile.firstName} just started new timer!!`, 'New Timer started!')
+
+        if(tokenIds.length !== 0) yield _PushNotification.send(tokenIds, `${user.profile.firstName} just started new timer!!`, 'New Timer started!')
 
         res.send({ success : true, timer : newTimer })
     }),
@@ -141,8 +118,9 @@ const timerModule = {
                 notification.putNotification({
                     title : 'Timer ended!',
                     description :`${user.profile.firstName} ended a timer!! Thanks for being a buddy they are safe!`,
-                    datetime : moment(Date.now()).utc().format(),
-                    image : ''
+                    image : '',
+                    timestamp : moment(Date.now()).utc().format(),
+                    isread : false
                 })
                 yield notification.saveToDataBase()
                 
@@ -151,7 +129,7 @@ const timerModule = {
                     tokenIds.push(viewerToken)       
                 }
             }
-            yield sendPushnotification( tokenIds, `${user.profile.firstName} ended a timer!! Thanks for being a buddy they are safe!`, 'Timer ended!')
+            if(tokenIds.length !== 0) yield _PushNotification.send( tokenIds, `${user.profile.firstName} ended a timer!! Thanks for being a buddy they are safe!`, 'Timer ended!')
 
             return res.send({ success : true, reason : '' })
         }
@@ -201,16 +179,14 @@ const timerModule = {
                 notification.putNotification({
                     title : 'Complete your Timer!!',
                     description : `${user.profile.firstName}, Complete your timer by confirmming your pin code!!`,
-                    datetime : moment(Date.now()).utc().format(),
-                    image : ''
+                    image : '',
+                    timestamp : moment(Date.now()).utc().format(),
+                    isread : false
                 })
                 yield notification.saveToDataBase()
                 console.log('Cron job working ....')
 
-                if( userPushtoken !== '' ) {
-                    console.log("Sending push notification for timer completion ... ");
-                    yield sendPushnotification( [ userPushtoken ], `${user.profile.firstName}, Complete your timer by confirmming your pin code!!`, 'Complete your Timer!!')
-                }
+                if( userPushtoken !== '' ) yield _PushNotification.send( [ userPushtoken ], `${user.profile.firstName}, Complete your timer by confirmming your pin code!!`, 'Complete your Timer!!')
                 /*
                 * Runs every weekday (Monday through Friday)
                 * at 11:30:00 AM. It does not run on Saturday
@@ -234,12 +210,13 @@ const timerModule = {
         notification.putNotification({
             title : 'Your Timer updated!',
             description :`${user.profile.firstName}, You just updated your timer!!`,
-            datetime : moment(Date.now()).utc().format(),
-            image : ''
+            image : '',
+            timestamp : moment(Date.now()).utc().format(),
+            isread : false
         })
         yield notification.saveToDataBase()
 
-        if( userPushtoken !== '' ) yield sendPushnotification( [ userPushtoken ], `${user.profile.firstName}, You just updated your timer!!`, 'Your Timer updated!')
+        if( userPushtoken !== '' ) yield _PushNotification.send( [ userPushtoken ], `${user.profile.firstName}, You just updated your timer!!`, 'Your Timer updated!')
 
         var tokenIds = [];
         for( var i = 0; i < timerBody.viewers.length; i ++ ) {
@@ -248,8 +225,9 @@ const timerModule = {
             notification.putNotification({
                 title : 'Timer updated!',
                 description :`${user.profile.firstName} just updated timer!!`,
-                datetime : moment(Date.now()).utc().format(),
-                image : ''
+                image : '',
+                timestamp : moment(Date.now()).utc().format(),
+                isread : false
             })
             yield notification.saveToDataBase()
 
@@ -258,7 +236,7 @@ const timerModule = {
                 tokenIds.push(viewerToken)
             }
         }
-        yield sendPushnotification( tokenIds, `${user.profile.firstName} just updated timer!!`, 'Timer updated!')
+        if( tokenIds.length !== 0) yield _PushNotification.send( tokenIds, `${user.profile.firstName} just updated timer!!`, 'Timer updated!')
         
         return res.send({ success : true, timer : timer })
     })
