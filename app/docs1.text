@@ -217,3 +217,67 @@ Body : {
     userId : Id of user
     newuserinfo : New user table 
 }
+
+
+--------------------2018.8.10----------------------
+POST : /emergency/occur
+BODY : {
+    description : String,
+    geo : {
+        address : String,
+        latitude : Number,
+        longitude : Number
+    }
+    medias : [
+        {
+             type : String(Picture or Video),
+            url : ''
+        },
+        {
+             type : String(Picture or Video),
+            url : ''
+        }, 
+        ...
+    ]
+}
+
+POST : /emergency/media/update
+BODY : {
+    incidentId : Id of emergency
+    medias : [
+        ....
+    ]
+}
+
+POST : /emergency/close
+BODY : {
+    incidentId : Id of incident
+}
+
+POST : /emergency/response
+BODY : {
+    incidentId : Id of incident
+}
+
+POST : /emergency/comment
+BODY : {
+    incidentId : Id of incident
+}
+
+POST : /emergency/response/save
+BODY : {
+    incidentId : Id of incident,
+    response : String
+}
+
+POST : /emergency/comment/save
+BODY : {
+    incidentId : Id of incident,
+    comment : String
+}
+
+POST : /emergency/media/upload
+BODY : {
+    filetype : String (Extend of File),
+    content : File content
+}

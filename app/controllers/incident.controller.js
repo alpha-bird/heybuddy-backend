@@ -17,6 +17,7 @@ const incidentModule = {
             createdTime : moment(Date.now()).utc().format(),
             description : req.body.incident.description,
             geo : req.body.incident.geo,
+            medias : req.body.incident.medias,
             reporter : {
                 reporterId : user._id,
                 email : user.email,

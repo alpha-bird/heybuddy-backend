@@ -15,7 +15,11 @@ const express = require('express'),
     feedbackRouter = require('./feedback'),
     messageRouter = require('./message'),
     notificationRouter = require('./notification'),
-    responseTemplateRouter = require('./restemplate');
+    responseTemplateRouter = require('./restemplate'),
+    emergencyRouter = require('./emergency'),
+    fakecallRouter = require('./fakecall'),
+    safewalkRouter = require('./safewalk'),
+    eyemeRouter = require('./eyeme');
 //export router
 module.exports = router;
 
@@ -39,3 +43,7 @@ feedbackRouter(router)
 notificationRouter(router)
 messageRouter(router)
 responseTemplateRouter(router)
+emergencyRouter(router)
+fakecallRouter(router)
+safewalkRouter(router)
+eyemeRouter(router)

@@ -1,5 +1,12 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+/*
+Media element schema
+{
+    type : 'Picture/Video',
+    url : ''
+}
+*/
 
 const incidentSchema = new Schema({
     status : {
@@ -26,6 +33,10 @@ const incidentSchema = new Schema({
             type : Number,
             default : 0
         }
+    },
+    medias : {
+        type : Array,
+        default : []
     },
     reporter : {
         reporterId : {
