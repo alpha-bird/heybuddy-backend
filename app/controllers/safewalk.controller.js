@@ -1,6 +1,6 @@
 const utilities = require('../lib/utilities'),
       wrapper = require('co-express'),
-      _SafeWalk = require('../models/safewalk'),
+      _SafeWalk = require('../models/safewalk');
 
 const safewalkModule = {
     create : wrapper(function*( req, res ) {

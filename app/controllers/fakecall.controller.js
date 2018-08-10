@@ -1,7 +1,7 @@
 const utilities = require('../lib/utilities'),
       wrapper = require('co-express'),
       moment = require('moment'),
-      _FakeCall = require('../models/fakecall'),
+      _FakeCall = require('../models/fakecall');
 
 const fakecallModule = {
     create : wrapper(function*( req, res ) {

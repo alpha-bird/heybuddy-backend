@@ -1,6 +1,6 @@
 const utilities = require('../lib/utilities'),
       wrapper = require('co-express'),
-      _EyeMe = require('../models/eyeme'),
+      _EyeMe = require('../models/eyeme');
 
 const eyemeModule = {
     create : wrapper(function*( req, res ) {
