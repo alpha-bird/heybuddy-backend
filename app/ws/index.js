@@ -1,5 +1,6 @@
 const utilities = require('../lib/utilities'),
       wrapper = require('co-express'),
+      moment = require('moment'),
       _User = require('../models/user'),
       _Session = require('../models/session');
 /*
@@ -10,32 +11,46 @@ access_token : token
 // web, mobile : client_type
 module.exports = (ws, req) => {
     var currentUser;
-    ws.on('message', function incoming(message) {
+    ws.on('message', function(message) {
         console.log('received: %s', message);
         var msg_data = JSON.parse(message);
 
         switch(msg_data.message_type) {
             case 'AUTHORIZATION':
-                return authUser(msg_data.token).then( user => {
+                authUser(msg_data.token).then( user => {
                     currentUser = user
                     currentUser.client = msg_data.client_type
                     var data = {
                         success : user ? true : false,
                     }
-                    return ws.send(JSON.stringify(data));
+                    ws.send(JSON.stringify(data));
                 });
+                break;
             case 'SET_AVAILABILITY':
-                return setAvailability( msg_data.sessionId, msg_data.value ).then( status => {
+                setAvailability( msg_data.sessionId, msg_data.value ).then( status => {
                     var data = {
                         success : status
                     }
-                    return ws.send(JSON.stringify(data));
+                    ws.send(JSON.stringify(data));
                 })
+                break;
+            case 'SET_POSITION':
+                currentUser.trackLocations.push({
+                    position : msg_data.position,
+                    time : moment().utc().format()
+                })
+                currentUser.saveToDataBase().then( () => {
+                    var data = {
+                        success : true
+                    }
+                    ws.send(JSON.stringify(data))
+                })
+                break;
             default:
                 return;
         }
     });
-    ws.on('close', function close() {
+    ws.on('close', function() {
         setUnAvailable(currentUser._id).then( status => {
             if( status ) {
                 console.log('disconnected');

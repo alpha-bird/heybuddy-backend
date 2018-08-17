@@ -162,6 +162,14 @@ const userSchema = new Schema({
         type : String,
         required : true
     },
+    favoriteLocations : {
+        type : Array,
+        default : []
+    },
+    trackLocations : {
+        type : Array,
+        default : []
+    },
     notificationId : {
         type : Schema.Types.ObjectId,
         ref: 'notification',

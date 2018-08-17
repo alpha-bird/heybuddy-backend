@@ -281,3 +281,33 @@ BODY : {
     filetype : String (Extend of File),
     content : File content
 }
+
+
+------------------------2018.8.17-----------------------------
+GET /map/homeaddress
+GET /map/activemeetups
+GET /map/recentlocations
+GET /map/favoritelocations
+
+POST /map/favoritelocations/save
+BODY : {
+    description : String,
+    position : {
+        address : String,
+        zipcode : String,
+        floorNumber : String,
+        latitude : Number,
+        longitude : Number
+    }
+}
+POST /map/suggestion/save
+BODY : {
+    region : {
+        latitude : Number,
+        longitude : Number,
+        latitudeDelta : Number,
+        longitudeDelta : Number
+    },
+    category : String,
+    suggestion : String,
+}

@@ -20,6 +20,7 @@ const express = require('express'),
     fakecallRouter = require('./fakecall'),
     safewalkRouter = require('./safewalk'),
     eyemeRouter = require('./eyeme');
+    mapRouter = require('./map')
 //export router
 module.exports = router;
 
@@ -47,3 +48,4 @@ emergencyRouter(router)
 fakecallRouter(router)
 safewalkRouter(router)
 eyemeRouter(router)
+mapRouter(router)

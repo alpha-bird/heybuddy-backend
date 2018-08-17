@@ -1,4 +1,5 @@
 const utilities = require('../lib/utilities'),
+      moment = require('moment'),
       wrapper = require('co-express'),
       _User = require('../models/user'),
       _NewsFeed = require('../models/newsfeed');
