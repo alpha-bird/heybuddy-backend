@@ -20,37 +20,51 @@ const userModule = {
     */
     signUp : wrapper( function*(req, res) {
             const { email, password, pin, profile, settings, pushId } = req.body
-            var hashedPassword = yield utilities.getHashPassword( password ) //Hash Password
-            
-            var newNotification = new _Notification( ) //New Empty Notification Document
-            yield newNotification.saveToDataBase()
+            var user = yield _User.findOneByEmail( email )
 
-            var newUser = new _User({
-                email : email,
-                password : hashedPassword,
-                pin : pin,
-                profile : profile,
-                settings : settings,
-                createdTime : moment().utc().format(),
-                notificationId : newNotification._id
-            }) //New User with Notification
-            yield newUser.saveToDataBase()
+            if( user ) {
+                return res.send({ 
+                    success: false , 
+                    accessToken : '', 
+                    sessionId : '', 
+                    user : {}, 
+                    message : 'User already exist!', 
+                    error : {} 
+                });
+            }
+            else {
+                var hashedPassword = yield utilities.getHashPassword( password ) //Hash Password
             
-            var newSession = new _Session({
-                userId : newUser._id,
-                pushId : pushId
-            });
-            yield newSession.saveToDataBase();
+                var newNotification = new _Notification( ) //New Empty Notification Document
+                yield newNotification.saveToDataBase()
 
-            var accessToken = utilities.generateJWT(newUser.email);
-            return res.send({ 
-                        success: true , 
-                        accessToken : accessToken, 
-                        sessionId : newSession._id, 
-                        user : newUser, 
-                        message : 'User registration success!', 
-                        error : {} 
-                    });
+                var newUser = new _User({
+                    email : email,
+                    password : hashedPassword,
+                    pin : pin,
+                    profile : profile,
+                    settings : settings,
+                    createdTime : moment().utc().format(),
+                    notificationId : newNotification._id
+                }) //New User with Notification
+                yield newUser.saveToDataBase()
+                
+                var newSession = new _Session({
+                    userId : newUser._id,
+                    pushId : pushId
+                });
+                yield newSession.saveToDataBase();
+
+                var accessToken = utilities.generateJWT(newUser.email);
+                return res.send({ 
+                            success: true , 
+                            accessToken : accessToken, 
+                            sessionId : newSession._id, 
+                            user : newUser, 
+                            message : 'User registration success!', 
+                            error : {} 
+                        });
+            }
         }),
     /*
     email : login request email
