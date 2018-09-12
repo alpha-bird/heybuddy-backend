@@ -441,6 +441,10 @@ const userModule = {
     getAllUsers : wrapper(function*(req, res) {
             var users = yield _User.findAll()
             res.send({ success : true, users : users })
+        }),
+    getUserSettings : wrapper(function*(req, res) {
+            var user = req.session.user
+            res.send({ success : true, settings : user.settings})
         })
 }
 

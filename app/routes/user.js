@@ -32,4 +32,5 @@ module.exports = ( router ) => {
     router.post( '/user/specific', _AuthCheck, userController.getUserProfileById);
     router.post( '/user/specific/update', _AuthCheck, userController.updateSpecificUser);
     router.get( '/users', _AuthCheck, userController.getAllUsers);
+    router.get( '/user/settings', _AuthCheck, userController.getUserSettings);
 }
