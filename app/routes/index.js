@@ -18,6 +18,7 @@ const express = require('express'),
     responseTemplateRouter = require('./restemplate'),
     emergencyRouter = require('./emergency'),
     fakecallRouter = require('./fakecall'),
+    settingsRouter = require('./settings'),
     safewalkRouter = require('./safewalk'),
     eyemeRouter = require('./eyeme');
     mapRouter = require('./map')
@@ -44,6 +45,7 @@ feedbackRouter(router)
 notificationRouter(router)
 messageRouter(router)
 responseTemplateRouter(router)
+settingsRouter(router)
 emergencyRouter(router)
 fakecallRouter(router)
 safewalkRouter(router)
